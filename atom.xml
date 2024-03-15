@@ -250,11 +250,11 @@
     <category term="旧日" scheme="https://yuxcoo.github.io/categories/%E6%97%A7%E6%97%A5/"/>
     
     
-    <category term="通信" scheme="https://yuxcoo.github.io/tags/%E9%80%9A%E4%BF%A1/"/>
-    
     <category term="IP" scheme="https://yuxcoo.github.io/tags/IP/"/>
     
     <category term="路由" scheme="https://yuxcoo.github.io/tags/%E8%B7%AF%E7%94%B1/"/>
+    
+    <category term="通信" scheme="https://yuxcoo.github.io/tags/%E9%80%9A%E4%BF%A1/"/>
     
   </entry>
   
@@ -280,9 +280,9 @@
     <category term="旧日" scheme="https://yuxcoo.github.io/categories/%E6%97%A7%E6%97%A5/"/>
     
     
-    <category term="网络模型" scheme="https://yuxcoo.github.io/tags/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"/>
-    
     <category term="通信" scheme="https://yuxcoo.github.io/tags/%E9%80%9A%E4%BF%A1/"/>
+    
+    <category term="网络模型" scheme="https://yuxcoo.github.io/tags/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"/>
     
   </entry>
   
