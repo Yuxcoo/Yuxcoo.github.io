@@ -1,0 +1,636 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>以太网和IP | Stay hungry. Stay foolish.</title><meta name="author" content="Yuxico"><meta name="copyright" content="Yuxico"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF5EE"><meta name="description" content="摘要：局域网技术的概述，IP基本原理以及IP子网划分  本期内容较为杂乱且基础，故列出以下大致目录  早期以太网技术 全双工与半双工 MDI与MDIX CSMA&#x2F;CD 以太网流量控制 现代以太网技术 WLAN技术 CSMA&#x2F;CA 广域网基本原理 常见接口 IP基本原理    早期以太网技术    名称 速率 介质类型 最大线缆长度     10BASE5 10 Mbps 粗同轴电缆 500m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以太网和IP">
+<meta property="og:url" content="https://blog.icjlu.eu.org/post/ab626e9a.html">
+<meta property="og:site_name" content="Stay hungry. Stay foolish.">
+<meta property="og:description" content="摘要：局域网技术的概述，IP基本原理以及IP子网划分  本期内容较为杂乱且基础，故列出以下大致目录  早期以太网技术 全双工与半双工 MDI与MDIX CSMA&#x2F;CD 以太网流量控制 现代以太网技术 WLAN技术 CSMA&#x2F;CA 广域网基本原理 常见接口 IP基本原理    早期以太网技术    名称 速率 介质类型 最大线缆长度     10BASE5 10 Mbps 粗同轴电缆 500m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/03/15/JLW2OdlFP8MAjYv.png">
+<meta property="article:published_time" content="2022-02-11T10:08:27.000Z">
+<meta property="article:modified_time" content="2024-03-15T05:39:36.000Z">
+<meta property="article:author" content="Yuxico">
+<meta property="article:tag" content="通信">
+<meta property="article:tag" content="IP">
+<meta property="article:tag" content="路由">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/03/15/JLW2OdlFP8MAjYv.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "以太网和IP",
+  "url": "https://blog.icjlu.eu.org/post/ab626e9a.html",
+  "image": "https://s2.loli.net/2024/03/15/JLW2OdlFP8MAjYv.png",
+  "datePublished": "2022-02-11T10:08:27.000Z",
+  "dateModified": "2024-03-15T05:39:36.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yuxico",
+      "url": "https://blog.icjlu.eu.org/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://blog.icjlu.eu.org/post/ab626e9a.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#3E2B2D')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF5EE')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 7 || hour >= 21
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":2,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Yuxico","link":"链接: ","source":"来源: Stay hungry. Stay foolish.","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#FF7D4D","bgDark":"#3E2B2D","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '以太网和IP',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Stay hungry. Stay foolish." type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/13/ZtKLEvJD4wjCoFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://s2.loli.net/2024/03/15/JLW2OdlFP8MAjYv.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/13/ZAOlmT7ytarcMjG.png" alt="Logo"><span class="site-name">Stay hungry. Stay foolish.</span></a><a class="nav-page-title" href="/"><span class="site-name">以太网和IP</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">以太网和IP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-11T10:08:27.000Z" title="发表于 2022-02-11 18:08:27">2022-02-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-15T05:39:36.000Z" title="更新于 2024-03-15 13:39:36">2024-03-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%97%A7%E6%97%A5/">旧日</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经过去&quot;,&quot;messageNext&quot;:&quot;天了，内容可能已经过时，请注意甄别内容呀！&quot;,&quot;postUpdate&quot;:&quot;2024-03-15 13:39:36&quot;}" hidden></div><p>摘要：局域网技术的概述，IP基本原理以及IP子网划分</p>
+<blockquote>
+<p>本期内容较为杂乱且基础，故列出以下大致目录</p>
+<ul>
+<li>早期以太网技术</li>
+<li>全双工与半双工</li>
+<li>MDI与MDIX</li>
+<li>CSMA/CD</li>
+<li>以太网流量控制</li>
+<li>现代以太网技术</li>
+<li>WLAN技术</li>
+<li>CSMA/CA</li>
+<li>广域网基本原理</li>
+<li>常见接口</li>
+<li>IP基本原理</li>
+</ul>
+</blockquote>
+<p><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/QA6kdFPHURLEpw1.png" alt="局域网技术 目前仅以太网仍在使用"><br>
+<strong>早期以太网技术</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">速率</th>
+<th style="text-align:center">介质类型</th>
+<th style="text-align:center">最大线缆长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">10BASE5</td>
+<td style="text-align:center">10 Mbps</td>
+<td style="text-align:center">粗同轴电缆</td>
+<td style="text-align:center">500m</td>
+</tr>
+<tr>
+<td style="text-align:center">10BASE2</td>
+<td style="text-align:center">10 Mbps</td>
+<td style="text-align:center">细同轴电缆</td>
+<td style="text-align:center">200m</td>
+</tr>
+<tr>
+<td style="text-align:center">10BASE-T</td>
+<td style="text-align:center">10 Mbps</td>
+<td style="text-align:center">双绞线</td>
+<td style="text-align:center">100m</td>
+</tr>
+</tbody>
+</table>
+<p>以10BASE5为例，10表示传输速率最高为10Mbps，5表示最大线缆长度为500m，仍可使用中继器将其延长，但最大长度不超过2000m。<em>10BASE-T为常见的网线</em><br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/5k69vt18PcbzTLu.png" alt="RJ-45接头即水晶头"><br>
+集线器和中继器的工作方式都为<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%8A%E5%8F%8C%E5%B7%A5/309852?fr=aladdin">半双工</a><br>
+光纤的工作方式为<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%85%A8%E5%8F%8C%E5%B7%A5/310007?fr=aladdin">全双工</a><br>
+半双工指在同一时间两端只能发送或接受信号，全双工则能同时收发信号并且不会产生冲突。<br>
+<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%8B%E8%B4%A8%E7%9B%B8%E5%85%B3%E6%8E%A5%E5%8F%A3"><strong>MDI和MDIX</strong></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">主机网卡(MDI)</th>
+<th style="text-align:center">路由器以太口(MDI)</th>
+<th style="text-align:center">交换机/集线器接入口(MDIX)</th>
+<th style="text-align:center">交换机/集线器级连口（MDI）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">主机网卡(MDI)</td>
+<td style="text-align:center">交叉线</td>
+<td style="text-align:center">交叉线</td>
+<td style="text-align:center">直连线</td>
+<td style="text-align:center">N/A</td>
+</tr>
+<tr>
+<td style="text-align:center">路由器以太口(MDI)</td>
+<td style="text-align:center">交叉线</td>
+<td style="text-align:center">交叉线</td>
+<td style="text-align:center">直连线</td>
+<td style="text-align:center">N/A</td>
+</tr>
+<tr>
+<td style="text-align:center">交换机/集线器接入口(MDIX)</td>
+<td style="text-align:center">直连线</td>
+<td style="text-align:center">直连线</td>
+<td style="text-align:center">交叉线</td>
+<td style="text-align:center">直连线</td>
+</tr>
+<tr>
+<td style="text-align:center">交换机/集线器级连口(MDI)</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">直连线</td>
+<td style="text-align:center">交叉线</td>
+</tr>
+<tr>
+<td style="text-align:center">同类接口互连用交叉线，异类接口互连用直连线</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/CSMA/CD/986847"><strong>CSMA/CD</strong></a><br>
+目的：解决总线型拓扑结构中半双工的收发冲突<br>
+工作机制：载波侦听-&gt;空闲-&gt;抢占-&gt;检测冲突-&gt;随即退避-&gt;退避期满，继续发送<br>
+缺点：延迟高</p>
+<hr>
+<p>数据的发送方式：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E6%92%AD/8946201?fr=aladdin">单播</a>，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BB%84%E6%92%AD/8946116?fr=aladdin">组播</a>，广播<br>
+数据链路层的以太网流量控制（防止传输速率太快导致数据丢失）方式：在半双工线路上采用<strong>背压式流控</strong>，接收方反向发送电压信号制造冲突，使发送方停止发送：在全双工线路上采用<strong>802.3 PAUSE流控</strong>接收方向保留组播地址01-80-C2-00-00-01发送PAUSE帧，通知发送方停止发送<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/VUwd6M7lOAPzQNx.png" alt="流控"></p>
+<hr>
+<h2 id="现代以太网技术">现代以太网技术</h2>
+<p>现代以太网采用交换机取代了中继器和集线器进行以太网拓扑，隔离冲突域，避免冲突域过大，进一步扩大物理连接范围，提高以太网带宽利用率，增加吞吐量，适应不同的速率和不同的双工状况。<br>
+<strong>WLAN技术</strong><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/Ep1SsxglMiZ3bvf.png" alt="802.11b/g工作频段划分图"><br>
+无线覆盖原则：蜂窝式覆盖。任意相邻区域使用无频率交叉的频道，如1、6、11频道；适当调整发射功率，避免跨区域同频干扰；蜂窝式无线覆盖实现无交叉频率重复使用<br>
+<br /><br>
+<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/CSMA%2FCA/10898090?fr=aladdin">CSMA/CA</a>（载波侦听多点接入／避让机制）<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/cgqF2HTuWoKdUmw.png" alt="CSMA/CA"><br>
+无线网络典型部署：热点覆盖、办公地点无线互联</p>
+<hr>
+<h2 id="广域网基本原理">广域网基本原理</h2>
+<p>目的：局域网主要完成工作站、终端、服务器等在较小物理范围内的互联，只能解决局部的资源共享；广域网可以使相距遥远的局域网互相连接起来，远距离传输数据、语音、视频等，实现大范围的资源共享<br>
+<br /><br>
+广域网连接方式：专线方式、电路交换方式、分组交换方式<br>
+<strong>接口线缆</strong><br>
+V.24和V.35均为串行接口<br>
+G口（以太网口）默认数据链路层协议802.3，S口（串口）默认数据链路层协议PPP。根据不同物理层介质，数据链路层选择不同的协议。<br>
+<em>以下接口线缆非仅广域网中使用</em><br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/G4lXMKjag2I5bTP.png" alt="V.24接口线缆（支持同/异步）"><br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/xiZEnrW5FvDdKJM.png" alt="V.35接口线缆（支持同步）"><br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/nu9rX3L2bfESsKN.png" alt="其他常见接口线缆"></p>
+<hr>
+<hr>
+<hr>
+<h2 id="IP基本原理">IP基本原理</h2>
+<p><strong>IP相关协议（网络层）</strong>：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/ICMP/572452">ICMP</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Internet%E7%BB%84%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AE?fromtitle=IGMP&amp;fromid=610474">IGMP</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/ARP/609343"><em><strong>ARP</strong></em></a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8F%8D%E5%90%91%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E5%8D%8F%E8%AE%AE?fromtitle=RARP&amp;fromid=610685"><em><strong>RARP</strong></em></a><br>
+IP的作用：标识节点和链路 ①用唯一的IP地址标识每一个节点②用唯一的IP网络号标识每一个链路；<br>
+寻址和转发①确定节点所在网络的位置，进而确定节点所在的位置②IP路由器选择适当的路径将IP包转发到目的节点；<br>
+适应各种数据链路 ①根据链路的MTU对IP包进行分片和重组 ②为了通过实际的数据链路传递信息，须建立IP地 址到数据链路层地址的映射<br>
+<br /><br>
+IP网络由多个网段构成，每个网段对应一个链路 ，路由器负责将网段连接起来，适配链路层 协议，在网络之间转发数据包<br>
+<br /><br>
+网络号用于区分不同的IP网络、主机号用于标识该网络内的一个IP节点<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/J5VUdthC73kMlHg.png" alt="IP头格式"><br>
+版本（Version）：用于标识封装是IPv4/IPv6<br>
+头长度（Internet Header Length,IHL）：描述数据包头的内容长度<br>
+总长度（Total Length）：数据包总长度，字段长16Bit，数据包最长为65535B<br>
+标识（Identification）：标识某个分片来自于哪个数据包<br>
+标志（Flags）：标识数据包是否允许分片<br>
+Fragment Offset：分片偏移，用于描述分片在数据包中的位置<br>
+生存时间（Time to Live,TTL）：该数据包允许经过的最多路由器数量（每经过一个路由器值-1，0时丢弃）<br>
+协议（Protocol）：标识上层协议TCP,6/UDP,17（协议号）<br>
+头校验和（Header Checksum）：用于检查包头完整性<br>
+源地址Source Address和目的地址Destination Address：标识数据包的源节点和目的节点IP地址<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/7qtn8lPuw3EyXHx.png" alt="IP地址自然分类"><br>
+A类IP地址：1.0.0.0~126.255.255.255（127为回环测试，127.0.0.1通常表示本机，0.0.0.0通常用于路由器指定默认路由），每个A类网络有2^24个A类IP地址，2^24-2个可用主机数<br>
+B类IP地址：128.0.0.0~191.255.255.255，每个B类网络有2^16个B类IP地址，2^16-2个可用主机数<br>
+C类IP地址：192.0.0.0~223.255.255.255，每个C类网络有2^8个C类IP地址，2^8-2个可用主机数<br>
+D类IP地址：第一个八位段1110开头，取值224~239，通常为组播地址<br>
+E类IP地址：11110开头，保留用于研究<br>
+网段（网络地址）：主机号全为0；网段广播（广播地址）：主机号全为1<br>
+ARP：将IP解析为MAC，RARP为反向ARP解析<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/CSRKGJdz4IDWhVZ.png" alt="主机单播IP包发送"><br>
+若目的地址所处网络号与本机所处网络司号相同，则目的处于直连网段；<br>
+①处于同一网段，主机可以与其直接通信，此时主机首先解析目的主机IP地址所对应的硬件地址，随即将IP包以此硬件地址为目的地址封装成帧，由直接连结此网段的接口发送给目的主机<br>
+②如果属于不同网段，则主机需要将IP包交给网关去处理，此时主机根据网关的IP地址解析其物理地址，随即将IP包以此硬件地址为目的地址封装成帧，由直连此网段的接口发送给网关<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/tEMpceUq2XKVkxL.png" alt="路由器单播IP包转发"><br>
+路由器收到IP包首先检查IP包的目的地址是不是自己，是的话就接收此包并将其解封装所得数据交给上层协议处理，如果目的IP不是自己<br>
+①处于同一个直连网段，可以与其直接通信，此时路由器首先解析目的IP地址所对应的硬件地址，随即将IP包以此硬件地址为目的地址封装成帧，由此直接连接此网段的接口发给目的主机<br>
+②如果处于不同网段，则需要交给下一跳路由器处理，此时根据路由器上面的路由表查出下一跳的IP地址，解析出一下跳的硬件地址，随即将IP包以此硬件地址为目的地址封装成帧，由此直接连接此网段的接口发给下一跳的路由器<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/9yquQawFd5AULfR.png" alt="主机接收IP包"></p>
+<hr>
+<h2 id="IP子网划分">IP子网划分</h2>
+<p>子网划分方法：在主机号中划分出子网号，达到在自然分类中再次划分主机的目的<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/FV7hIClTjxiDwYs.png" alt="IP地址与子网掩码"><br>
+得到一个IP地址首先判断在自然分类中他的网络号的位数，再通过给出的位数相减得到子网号位数；得到一个16进制子网掩码首先将其转换为二进制，再判断子网号位数，用自然分类得出网络地址和广播地址的方式就能得出子网划分后的地址的网络地址/广播地址。<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/AOdpElL56UzW8eb.png" alt="根据主机地址数划分子网"><br>
+可用主机数：2^（主机位数）-2  <em>//此时的主机位数同自然分类中的主机位数-子网号位数</em>（在告知主机数和IP时，用2^（主机位数）-2&gt;=主机数，来算出主机位数和子网位数即可得出子网掩码）<br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/r2gmklVTa9wfWpi.png" alt="根据子网掩码数计算子网数"><br>
+<img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/gOEQTU4ycXpdisJ.png" alt="根据子网数划分子网"><br>
+可用子网数：2^（子网位数）（在告知子网数和IP时，用2^（子网位数）&gt;=子网数，来算出子网位数即可得出子网掩码）<br>
+可用主机范围：网络地址+1~广播地址-1<br>
+<strong>VLSM和CIDR</strong><br>
+子网划分的局限性 ：无法实现把网络划分为不同大小的子网，常常会浪费许多主机地址 ，使用VLSM(Variable Length Subnet Mask，可变长子网掩码）可以允许使用多个子网掩码划分子网，使组织的IP地址空间得到更有效的利用<br>
+CIDR(Classless Inter-Domain Routing, 无类域间路由） 消除了自然分类地址和子网划分的界限、将网络前缀相同的连续IP地址组成CIDR地址块、支持强化地址汇聚<br>
+<em>题目示例</em><br>
+<em><strong>基于CIDR划分子网</strong></em></p>
+<ol>
+<li>请根据10.0.0.0/8划分4个子网，并给出每个子网的网络地址、广播地址、可用IP地址范围和子网掩码。<br>
+2^M&gt;=4,M&gt;=2<br>
+8+2=10位，255.192.0.0<br>
+10.0.0.0  10.63.255.255   10.0.0.1~10.63.255.254<br>
+10.64.0.0  10.127.255.255   10.64.0.1~10.127.255.254<br>
+10.128.0.0  10.191.255.255   10.128.0.1~10.191.255.254<br>
+10.192.0.0  10.255.255.255   10.192.0.1~10.255.255.254<br>
+<br /></li>
+<li>请根据172.16.96.0/19划分4个子网，并给出每个子网的网络地址、广播地址、可用IP地址范围和子网掩码。<br>
+2^M&gt;=4,M&gt;=2<br>
+子网掩码：19+2=21；255.255.248.0<br>
+172.16.96.0  172.16.103.255  172.16.96.1~172.16.103.254<br>
+172.16.104.0  172.16.111.255  172.16.104.1~172.16.111.254<br>
+172.16.112.0  172.16.119.255   172.16.112.1~172.16.119.254<br>
+172.16.120.0  172.16.127.255   172.16.120.1~172.16.127.254<br>
+<br /></li>
+<li>请根据IP地址为100.100.100.100/11，计算该IP地址所属网段的网络地址、广播地址、可用IP地址范围和子网掩码。<br>
+100.011 00000.0.0=100.96.0.0<br>
+100.011 11111.255.255=100.127.255.255<br>
+可用IP地址范围：100.96.0.1~100.127.255.254<br>
+255.224.0.0<br>
+<br /></li>
+<li>请根据IP地址为200.200.200.200/27，计算该IP地址所属网段的网络地址、广播地址、可用IP地址范围和子网掩码。<br>
+200.200.200.110 11111<br>
+200.200.200.192  200.200.200.223<br>
+200.200.200.193~200.200.200.222<br>
+255.255.255.224</li>
+</ol>
+<hr>
+<hr>
+<hr>
+<p><em><strong>基于VLSM划分子网</strong></em></p>
+<ol>
+<li>某公司有A、B、C、D四个部门，计算机数量分别是100台、55台、29台、20台。该公司拟通过192.168.1.0/24划分子网，请给出每个子网的网络地址、广播地址、可用IP地址范围和子网掩码。<br>
+A：2^n-2&gt;=100,n&gt;=7,32-7=25<br>
+192.168.1.0 0000000:<br>
+192.168.1.0  192.168.1.127   192.168.1.1~192.168.1.126<br>
+B；2^n-2&gt;=55,n&gt;=6;32-6=26<br>
+192.168.1.1 0 000000:<br>
+192.168.1.128  192.168.1.191  192.168.1.129~192.168.1.190<br>
+C:2^n-2&gt;=29,n&gt;=5;32-5=27<br>
+192.168.1.110 00000:<br>
+192.168.1.192 192.168.1.223  192.168.1.193~192.168.1.222<br>
+D:2^n-2&gt;=20,n&gt;=5;32-5=27<br>
+192.168.1.111 00000:<br>
+192.168.1.224  192.168.1.255  192.168.1.225~192.168.1.254<br>
+<br /></li>
+<li>某公司向运营商（ISP）申请到200.200.200.160/27的网络地址，数据中心有10台服务器，5个公网IP用作NAT（网络地址转换），其他IP用作网络设备之间提供点对点服务。请划分子网，并给出每个子网的网络地址、广播地址、可用IP地址范围和子网掩码。</li>
+</ol>
+<hr>
+<p><em><strong>地址聚合</strong></em></p>
+<ol>
+<li>某企业分配给产品部的IP地址块为192.168.31.192/26，分配给市场部的IP地址块为192.168.31.160/27，分配给财务部的IP地址块为192.168.31.128/27，那么这三个地址块经过聚合后的地址为（C  ）<br>
+A、192.168.31.0/25                B、192.168.31.0/26<br>
+C、192.168.31.128/25              D、192.168.31.128/26<br>
+比较，相同的部分均为192.168.31，总共24位相同，最后一组换成二进制再比较：<br>
+192.168.31.11000000<br>
+192.168.31.10100000<br>
+192.168.31.10000000<br>
+比较得出，总共25位相同，那么，聚合后的IP（网络前缀）就为192.168.31.10000000，将10000000转为十进制为128，聚合后的IP就是192.168.31.128。可直接写成192.168.31.128/25。<br>
+因为有25位相同，也以，子网掩码网络号就是25位，主机号剩下7位，网络号全为1，主机号全为0，即11111111.11111111.11111111.10000000，转换为十进制，255.255.255.128。<br>
+<br /></li>
+<li>有４条路由：172.18.129.0/24, 172.18.130.0/24, 172.18.132.0/24, 172.18.133.0/24,如果进行路由会聚，能覆盖这４条路由的地址是（A ）。<br>
+A．172.18.128.0/21                B. 172.18.128.0/22<br>
+C.172.18.130.0/22                 D. 172.18.132.0/23<br>
+首先从左到右开始，把不同的那个ip数字换算成二进制，<br>
+即 129 二进制 1000 0001 130 二进制 1000 0010 132 二进制 1000 0100 133 二进制 1000 0101<br>
+这四个数的前五位相同都是10000，所以加上前面的172.18这两部分相同的位数，网络号就是8+8+5=21。把共同的保留下来，其他全部为0，就是路由汇聚的地址。10000000转换回十进制就是128。所以，路由汇聚的ip地址就是172.18.128.0，最终就是172.18.128.0/21。<br>
+<br /></li>
+<li>为缩小路由表，请根据192.168.20.0/24、192.168.21.0/24、192.168.22.0/24、192.168.23.0/24等4个子网进行地址聚合，求出超网地址。（不同的号位为0）<br>
+192.168.20.0/24 192.168.00010100.0<br>
+192.168.21.0/24 192.168.00010101.0<br>
+192.168.22.0/24 192.168.00010110.0<br>
+192.168.23.0/24 192.168.00010111.0<br>
+故可得超网地址为：192.168.20.0/22</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org">Yuxico</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org/post/ab626e9a.html">https://blog.icjlu.eu.org/post/ab626e9a.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.icjlu.eu.org" target="_blank">Stay hungry. Stay foolish.</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%80%9A%E4%BF%A1/">通信</a><a class="post-meta__tags" href="/tags/IP/">IP</a><a class="post-meta__tags" href="/tags/%E8%B7%AF%E7%94%B1/">路由</a></div><div class="post-share"><div class="social-share" data-image="https://s2.loli.net/2024/03/15/JLW2OdlFP8MAjYv.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/post/b66e59b1.html" title="OSI和TCPIP"><img class="cover" src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/Ar1TMUVLCRfDzYG.png" onerror="onerror=null;src='/img/404.png'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">OSI和TCPIP</div></div><div class="info-2"><div class="info-item-1">摘要：OSI模型的7层结构及对应功能，TCP/IP模型的分层结构和OSI模型的对比  开放式系统互联模型（Open System Interconnection Model，缩写：OSI；简称为OSI模型）是一种概念模型，由国际标准化组织（ISO）提出，一个试图使各种计算机在世界范围内互连为网络的标准框架。定义于ISO/IEC...</div></div></div></a><a class="pagination-related" href="/post/fbbe638c.html" title="小记数字图像处理"><img class="cover" src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/14/ZanDKIpgjequVHw.jpg" onerror="onerror=null;src='/img/404.png'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">小记数字图像处理</div></div><div class="info-2"><div class="info-item-1">数字图像处理第3章图像增强 若数学公式加载失败，请移步主站 γ校正 非线性部件的输人-输出特性，都是一个能够反映各自特性的幂函数，即如果输人的光信号强度为L,输出的电信号强度为I,则输入、输出之间的关系满足 I=c⋅LγI = c ·...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/b66e59b1.html" title="OSI和TCPIP"><img class="cover" src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/Ar1TMUVLCRfDzYG.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-11</div><div class="info-item-2">OSI和TCPIP</div></div><div class="info-2"><div class="info-item-1">摘要：OSI模型的7层结构及对应功能，TCP/IP模型的分层结构和OSI模型的对比  开放式系统互联模型（Open System Interconnection Model，缩写：OSI；简称为OSI模型）是一种概念模型，由国际标准化组织（ISO）提出，一个试图使各种计算机在世界范围内互连为网络的标准框架。定义于ISO/IEC...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/13/ZtKLEvJD4wjCoFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yuxico</div><div class="author-info-description">生如逆旅，一苇以航</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yuxcoo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Yuxcoo" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yuxicon@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://space.bilibili.com/533860721" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00aeec;"></i></a><a class="social-icon" href="https://twitter.com/yxico_cjlu" target="_blank" title="Twitter"><i class="fab fa-x-twitter" style="color: #0f1419;"></i></a><a class="social-icon" href="https://t.me/+Z8s3eL8dhgA3YWRl" target="_blank" title="Telegram"><i class="fab fa-telegram" style="color: #4b9dee;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">雪珠声声入耳，一如古柏，我身依然故我。
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%B0%E4%BB%A3%E4%BB%A5%E5%A4%AA%E7%BD%91%E6%8A%80%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">现代以太网技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%BF%E5%9F%9F%E7%BD%91%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">广域网基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">IP基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP%E5%AD%90%E7%BD%91%E5%88%92%E5%88%86"><span class="toc-number">4.</span> <span class="toc-text">IP子网划分</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/countGoodIntegers.html" title="LeetCode每日一题2025-04-12"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2025/04/12/mVNQBIdpGWLZ8JE.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-04-12"/></a><div class="content"><a class="title" href="/post/countGoodIntegers.html" title="LeetCode每日一题2025-04-12">LeetCode每日一题2025-04-12</a><time datetime="2025-04-12T02:06:28.000Z" title="发表于 2025-04-12 10:06:28">2025-04-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/excelfunc.html" title="Excel函数使用与周报开发"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2025/04/11/lTnjGJVa92CyZu1.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="Excel函数使用与周报开发"/></a><div class="content"><a class="title" href="/post/excelfunc.html" title="Excel函数使用与周报开发">Excel函数使用与周报开发</a><time datetime="2025-04-11T13:15:25.000Z" title="发表于 2025-04-11 21:15:25">2025-04-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/countSymmetricIntegers.html" title="LeetCode每日一题2025.04.11"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2025/04/11/AdRBOesFuUjxzPT.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025.04.11"/></a><div class="content"><a class="title" href="/post/countSymmetricIntegers.html" title="LeetCode每日一题2025.04.11">LeetCode每日一题2025.04.11</a><time datetime="2025-04-11T06:33:18.000Z" title="发表于 2025-04-11 14:33:18">2025-04-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/SQLfunc.html" title="SQL常用函数补充"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2025/04/11/Bmy3PUMG8A6aoNR.jpg" onerror="this.onerror=null;this.src='/img/404.png'" alt="SQL常用函数补充"/></a><div class="content"><a class="title" href="/post/SQLfunc.html" title="SQL常用函数补充">SQL常用函数补充</a><time datetime="2025-03-30T11:53:01.000Z" title="发表于 2025-03-30 19:53:01">2025-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/linuxba.html" title="Linux基础"><img src= "/img/tinyDog.gif" data-lazy-src="https://s2.loli.net/2024/03/15/UV7bh68NGP4ATQo.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="Linux基础"/></a><div class="content"><a class="title" href="/post/linuxba.html" title="Linux基础">Linux基础</a><time datetime="2023-04-13T10:13:29.000Z" title="发表于 2023-04-13 18:13:29">2023-04-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://s2.loli.net/2024/03/15/I62Ss3P7WByK5Un.png);"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Yuxico</div><div class="runtime"><span id="runtimeshow"><i class="fas fa-clock"></i><span class="runtime-text">时间已奔赴 </span><span id="runtime_days"></span><span>天 </span><span id="runtime_hours"></span><span>小时 </span><span id="runtime_minutes"></span><span>分钟 </span><span id="runtime_seconds"></span><span>秒</span></span></div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div><script>function updateRuntime() {
+  const start = new Date("2022-01-01 00:00:00");
+  const now = new Date();
+  const diff = now - start;
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  document.getElementById("runtime_days").innerHTML = days;
+  document.getElementById("runtime_hours").innerHTML = hours;
+  document.getElementById("runtime_minutes").innerHTML = minutes;
+  document.getElementById("runtime_seconds").innerHTML = seconds;
+}
+
+setInterval(updateRuntime, 1000);
+updateRuntime();</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天" style="display:none"><i class="fas fa-message"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="Ruby,Python,JavaScript,TypeScript,HTML,CSS,Vue,React,Node.js,R,C#,C++,Matlab,SAS,PHP,Go,SQL" data-fontsize="16px" data-random="true" async="async"></script><script>(() => {
+  btf.getScript('//code.tidio.co/gcpmbfallv68ddoa0zzuekn6jcrc5m5v.js').then(() => {
+    const isChatBtn = true
+    const isChatHideShow = true
+
+    if (isChatBtn) {
+      let isShow = false
+      const close = () => {
+        window.tidioChatApi.hide()
+        isShow = false
+      }
+      
+      const open = () => {
+        window.tidioChatApi.open()
+        window.tidioChatApi.show()
+        isShow = true
+      }
+
+      const onTidioChatApiReady = () => {
+        window.tidioChatApi.hide()
+        window.tidioChatApi.on("close", close)
+      }
+      if (window.tidioChatApi) {
+        window.tidioChatApi.on("ready", onTidioChatApiReady)
+      } else {
+        document.addEventListener("tidioChat-ready", onTidioChatApiReady)
+      }
+
+      window.chatBtnFn = () => {
+        if (!window.tidioChatApi) return
+        isShow ? close() : open()
+      }
+
+      document.getElementById('chat-btn').style.display = 'block'
+
+    } else if (isChatHideShow) {
+      window.chatBtn = {
+        hide: () => window.tidioChatApi && window.tidioChatApi.hide(),
+        show: () => window.tidioChatApi && window.tidioChatApi.show()
+      }
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章或任意内容..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
