@@ -102,11 +102,11 @@
     
     <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
     
-    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
-    
     <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
     
     <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
+    
+    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
     
   </entry>
   
@@ -226,11 +226,11 @@
     
     <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
     
-    <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
-    
     <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
     
     <category term="字符串处理" scheme="https://blog.icjlu.eu.org/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/"/>
+    
+    <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
     
   </entry>
   
