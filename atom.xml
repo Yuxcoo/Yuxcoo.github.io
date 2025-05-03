@@ -6,7 +6,7 @@
   <link href="https://blog.icjlu.eu.org/atom.xml" rel="self"/>
   
   <link href="https://blog.icjlu.eu.org/"/>
-  <updated>2025-05-02T04:44:53.843Z</updated>
+  <updated>2025-05-03T06:41:36.484Z</updated>
   <id>https://blog.icjlu.eu.org/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LeetCode每日一题2025-05-03</title>
+    <link href="https://blog.icjlu.eu.org/post/minimum-domino-rotations-for-equal-row.html"/>
+    <id>https://blog.icjlu.eu.org/post/minimum-domino-rotations-for-equal-row.html</id>
+    <published>2025-05-03T02:15:52.000Z</published>
+    <updated>2025-05-03T06:41:36.484Z</updated>
+    
+    <content type="html"><![CDATA[<h1><a href="https://leetcode.cn/problems/minimum-domino-rotations-for-equal-row/">1007. 行相等的最少多米诺旋转</a> M</h1><p>在一排多米诺骨牌中，<code>tops[i]</code> 和 <code>bottoms[i]</code> 分别代表第 <code>i</code> 个多米诺骨牌的上半部分和下半部分。（一个多米诺是两个从 1 到 6 的数字同列平铺形成的 —— 该平铺的每一半上都有一个数字。）</p><p>我们可以旋转第 <code>i</code> 张多米诺，使得 <code>tops[i]</code> 和 <code>bottoms[i]</code> 的值交换。</p><p>返回能使 <code>tops</code> 中所有值或者 <code>bottoms</code> 中所有值都相同的最小旋转次数。</p><p>如果无法做到，返回 <code>-1</code>.</p><p><strong>示例 1：</strong></p><p><img src="https://s2.loli.net/2025/05/03/LcKUAD3wXMYTgsi.png" alt="示例"></p><blockquote><p>输入：tops = [2,1,2,4,2,2], bottoms = [5,2,6,2,3,2]<br>输出：2<br>解释：<br>图一表示：在我们旋转之前， tops 和 bottoms 给出的多米诺牌。<br>如果我们旋转第二个和第四个多米诺骨牌，我们可以使上面一行中的每个值都等于 2，如图二所示。</p></blockquote><p><strong>示例 2：</strong></p><blockquote><p>输入：tops = [3,5,1,2,3], bottoms = [3,6,3,3,4]<br>输出：-1<br>解释： 在这种情况下，不可能旋转多米诺牌使一行的值相等。</p></blockquote><p><strong>提示：</strong></p><ul><li><code>2 &lt;= tops.length &lt;= 2 * 10⁴</code></li><li><code>bottoms.length == tops.length</code></li><li><code>1 &lt;= tops[i], bottoms[i] &lt;= 6</code></li></ul><h2 id="问题分析">问题分析</h2><p>给定两条长度相同的数组 <code>tops</code> 和 <code>bottoms</code>，表示一排多米诺骨牌的上下数字。你可以对任意一张牌做“旋转”操作（即上下数字交换位置）。目标是让 <strong>整条“上行”</strong> 或 <strong>整条“下行”</strong> 的数字都相同，求所需的最少旋转次数；如果做不到，则返回 -1。</p><h2 id="算法思路">算法思路</h2><p>假设最终我们要把上行全部变成某个数字 <code>x</code>。那么对于第 1 张牌，它转前在上行是 <code>tops[0]</code>，转后可能是拿下面的 <code>bottoms[0]</code> 过来。</p><ul><li>如果最终目标行全是 <code>x</code>，第 1 张牌要么原本上面就是 <code>x</code>（即 <code>tops[0] == x</code>），要么通过旋转后上面成为 <code>bottoms[0] == x</code>。</li><li>因此，唯一可能的候选 <code>x</code> 就是 <code>&#123; tops[0], bottoms[0] &#125;</code> 两个值之一。</li><li>其它任何值作为目标，都不可能同时兼顾第 1 张牌。</li></ul><h2 id="时间复杂度">时间复杂度</h2><p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>，其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 是多米诺数量。至多对两个候选各做一次「线性遍历」。</p><p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>，只用了常数级额外变量（两个计数器和一个候选集合）。</p><h2 id="代码分解">代码分解</h2><ol><li><p><strong>确定候选目标值</strong><br>只可能让最终整行相同的值是第一张牌上或下的数字，记为 <code>x1 = tops[0]</code>、<code>x2 = bottoms[0]</code>。</p></li><li><p><strong>对每个候选值 x，遍历整排牌</strong></p><ul><li>用两个计数器 <code>rot_top</code> 和 <code>rot_bot</code> 分别记录：<ul><li><code>rot_top</code>：若想让 <strong>上行tops</strong> 全部变为 <code>x</code>，需要旋转的次数；</li><li><code>rot_bot</code>：若想让 <strong>下行bottoms</strong> 全部变为 <code>x</code>，需要旋转的次数。</li></ul></li><li>遍历索引 <code>i</code>，对每一张牌：<ul><li>若 <code>tops[i]≠x</code> 且 <code>bottoms[i]≠x</code>，说明这张牌无论如何（原地或旋转）都无法在上行或下行出现 <code>x</code>，立即返回不可行（记为无穷大，最后结果取最小会被过滤）。</li><li>否则：<ul><li><strong>想让上行变成 x</strong>：如果 <code>tops[i]≠x</code>，则必须旋转这一张，令 <code>rot_top++</code>。</li><li><strong>想让下行变成 x</strong>：如果 <code>bottoms[i]≠x</code>，则必须旋转这一张，令 <code>rot_bot++</code>。</li></ul></li></ul></li></ul></li><li><p><strong>取两条方案中的最小值</strong></p><ul><li>对候选 <code>x1</code>、<code>x2</code> 分别计算后（要么把上行全换成 <code>x</code>，需要 <code>rot_top</code> 次旋转；<br>要么把下行全换成 <code>x</code>，需要 <code>rot_bot</code> 次旋转），</li><li>答案为其中较小的旋转次数；</li><li>若都是无穷大，则返回 <code>-1</code>。</li></ul></li><li><p><strong>小结</strong></p><ol><li>从 <code>&#123; tops[0], bottoms[0] &#125;</code> 中拿到至多两个候选 <code>x</code>。</li><li>对每个候选值调用上面“检查并计数”逻辑，得到一个旋转次数（或“无解”标记）。</li><li>在这两个结果中取最小，若都是“无解”，则返回 -1，否则返回该最小值。</li></ol></li></ol><h2 id="代码实现">代码实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minDominoRotations</span>(<span class="params">self, tops: <span class="type">List</span>[<span class="built_in">int</span>], bottoms: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 内部函数：给定目标 x，返回让上行或下行全为 x 的最少旋转次数</span></span><br><span class="line">        <span class="comment"># 如果无解，则返回 float(&#x27;inf&#x27;)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">            rot_top = <span class="number">0</span>   <span class="comment"># 让 tops 全为 x，需要的旋转次数</span></span><br><span class="line">            rot_bot = <span class="number">0</span>   <span class="comment"># 让 bottoms 全为 x，需要的旋转次数</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> t, b <span class="keyword">in</span> <span class="built_in">zip</span>(tops, bottoms):</span><br><span class="line">                <span class="comment"># 如果这张牌两面都不是 x，就不可能通过任何旋转获得 x</span></span><br><span class="line">                <span class="keyword">if</span> t != x <span class="keyword">and</span> b != x:</span><br><span class="line">                    <span class="keyword">return</span> <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)  <span class="comment"># 无解</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># 若上面不是 x，则必须旋转一次</span></span><br><span class="line">                <span class="keyword">if</span> t != x:</span><br><span class="line">                    rot_top += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 若下面不是 x，则必须旋转一次</span></span><br><span class="line">                <span class="keyword">if</span> b != x:</span><br><span class="line">                    rot_bot += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 返回两种方案的较小旋转次数</span></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">min</span>(rot_top, rot_bot)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 仅需检查前第一张牌的两个面</span></span><br><span class="line">        candidates = &#123;tops[<span class="number">0</span>], bottoms[<span class="number">0</span>]&#125;</span><br><span class="line">        ans = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 分别试每个候选值</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> candidates:</span><br><span class="line">            ans = <span class="built_in">min</span>(ans, check(x))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 若仍是无穷，说明两个候选都无解</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span> <span class="keyword">if</span> ans == <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>) <span class="keyword">else</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>以 <code>tops = [2,1,2,4,2,2]</code>，<code>bottoms = [5,2,6,2,3,2]</code> 为例：</p><ul><li>候选集合：<code>&#123; 2, 5 &#125;</code></li></ul><p>试 <code>x = 2</code></p><table><thead><tr><th>i</th><th>tops[i]</th><th>bottoms[i]</th><th>tops[i]==2?</th><th>bottoms[i]==2?</th><th>rot_top 增量</th><th>rot_bot 增量</th></tr></thead><tbody><tr><td>0</td><td>2</td><td>5</td><td>是</td><td>否</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>2</td><td>否</td><td>是</td><td>1</td><td>0</td></tr><tr><td>2</td><td>2</td><td>6</td><td>是</td><td>否</td><td>0</td><td>1</td></tr><tr><td>3</td><td>4</td><td>2</td><td>否</td><td>是</td><td>1</td><td>0</td></tr><tr><td>4</td><td>2</td><td>3</td><td>是</td><td>否</td><td>0</td><td>1</td></tr><tr><td>5</td><td>2</td><td>2</td><td>是</td><td>是</td><td>0</td><td>0</td></tr><tr><td></td><td></td><td></td><td></td><td><strong>合计</strong></td><td><strong>2</strong></td><td><strong>3</strong></td></tr></tbody></table><p>试 <code>x = 5</code></p><p>检查到 <code>tops[1]=1</code> 且 <code>bottoms[1]=2</code> 都不是 5，立即判定无解（记作 ∞）。</p><p>最终在 <code>&#123;2, ∞&#125;</code> 中取最小，就是 2。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1&gt;&lt;a href=&quot;https://leetcode.cn/problems/minimum-domino-rotations-for-equal-row/&quot;&gt;1007. 行相等的最少多米诺旋转&lt;/a&gt; M&lt;/h1&gt;
+&lt;p&gt;在一排多米诺骨牌中，&lt;code&gt;tops[i]&lt;/</summary>
+      
+    
+    
+    
+    <category term="算法" scheme="https://blog.icjlu.eu.org/categories/%E7%AE%97%E6%B3%95/"/>
+    
+    
+    <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
+    
+    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
+    
+    <category term="中等" scheme="https://blog.icjlu.eu.org/tags/%E4%B8%AD%E7%AD%89/"/>
+    
+    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
+    
+  </entry>
   
   <entry>
     <title>LeetCode每日一题2025-05-02</title>
@@ -39,13 +70,13 @@
     
     <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
     
-    <category term="字符串处理" scheme="https://blog.icjlu.eu.org/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/"/>
-    
     <category term="中等" scheme="https://blog.icjlu.eu.org/tags/%E4%B8%AD%E7%AD%89/"/>
     
-    <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="字符串处理" scheme="https://blog.icjlu.eu.org/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/"/>
     
     <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
+    
+    <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
     
   </entry>
   
@@ -74,11 +105,11 @@
     
     <category term="困难" scheme="https://blog.icjlu.eu.org/tags/%E5%9B%B0%E9%9A%BE/"/>
     
+    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
+    
     <category term="二分查找" scheme="https://blog.icjlu.eu.org/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     
     <category term="排序" scheme="https://blog.icjlu.eu.org/tags/%E6%8E%92%E5%BA%8F/"/>
-    
-    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
     
     <category term="有序集合" scheme="https://blog.icjlu.eu.org/tags/%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88/"/>
     
@@ -109,9 +140,9 @@
     
     <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
     
-    <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
-    
     <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
+    
+    <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
@@ -142,9 +173,9 @@
     
     <category term="滑动窗口" scheme="https://blog.icjlu.eu.org/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
-    
     <category term="前缀和" scheme="https://blog.icjlu.eu.org/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    
+    <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
     
   </entry>
   
@@ -175,9 +206,9 @@
     
     <category term="滑动窗口" scheme="https://blog.icjlu.eu.org/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
-    
     <category term="前缀和" scheme="https://blog.icjlu.eu.org/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    
+    <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
     
   </entry>
   
@@ -332,13 +363,13 @@
     
     <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
     
-    <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
+    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
     
-    <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
+    <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
     
     <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
     
-    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
+    <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
@@ -538,11 +569,11 @@
     
     <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
     
+    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
+    
     <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
     
     <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
-    
-    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
     
     <category term="数据结构" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     
@@ -647,37 +678,6 @@
     <category term="可视化" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/"/>
     
     <category term="看板与报表" scheme="https://blog.icjlu.eu.org/tags/%E7%9C%8B%E6%9D%BF%E4%B8%8E%E6%8A%A5%E8%A1%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>LeetCode每日一题2025-04-14</title>
-    <link href="https://blog.icjlu.eu.org/post/countGoodTriplets.html"/>
-    <id>https://blog.icjlu.eu.org/post/countGoodTriplets.html</id>
-    <published>2025-04-14T01:00:05.000Z</published>
-    <updated>2025-04-16T01:28:33.434Z</updated>
-    
-    <content type="html"><![CDATA[<h1><a href="https://leetcode.cn/problems/count-good-triplets/">1534. 统计好三元组</a> E</h1><p>给你一个整数数组 <code>arr</code> ，以及 <code>a</code>、<code>b</code> 、<code>c</code> 三个整数。请你统计其中好三元组的数量。</p><p>如果三元组 <code>(arr[i], arr[j], arr[k])</code> 满足下列全部条件，则认为它是一个 <strong>好三元组</strong> 。</p><ul><li><code>0 &lt;= i &lt; j &lt; k &lt; arr.length</code></li><li><code>|arr[i] - arr[j]| &lt;= a</code></li><li><code>|arr[j] - arr[k]| &lt;= b</code></li><li><code>|arr[i] - arr[k]| &lt;= c</code></li></ul><p>其中 <code>|x|</code> 表示 <code>x</code> 的绝对值。</p><p>返回 <strong>好三元组的数量</strong> 。</p><p><strong>示例 1：</strong></p><blockquote><p><strong>输入：</strong> arr = [3,0,1,1,9,7], a = 7, b = 2, c = 3<br><strong>输出：</strong> 4<br><strong>解释：</strong> 一共有 4 个好三元组：[(3,0,1), (3,0,1), (3,1,1), (0,1,1)] 。</p></blockquote><p><strong>示例 2：</strong></p><blockquote><p><strong>输入：</strong> arr = [1,1,2,2,3], a = 0, b = 0, c = 1<br><strong>输出：</strong> 0<br><strong>解释：</strong> 不存在满足所有条件的三元组。</p></blockquote><p><strong>提示：</strong></p><ul><li><code>3 &lt;= arr.length &lt;= 100</code></li><li><code>0 &lt;= arr[i] &lt;= 1000</code></li><li><code>0 &lt;= a, b, c &lt;= 1000</code></li></ul><h2 id="问题分析"><strong>问题分析</strong></h2><p>给定数组 arr，以及三个整数 a、b、c，需要统计满足以下三个条件的三元组 (arr[i], arr[j], arr[k]) 的数量（其中 0 &lt;= i &lt; j &lt; k &lt; len(arr)）：</p><ul><li><code>|arr[i] - arr[j]| &lt;= a</code></li><li><code>|arr[j] - arr[k]| &lt;= b</code></li><li><code>|arr[i] - arr[k]| &lt;= c</code></li></ul><h2 id="算法思路"><strong>算法思路</strong></h2><ul><li><strong>暴力枚举</strong>：直接使用三重循环枚举所有可能的三元组，然后检查是否满足条件。</li><li><strong>提前剪枝</strong>：在第二层循环中，若<code>abs(arr[i] - arr[j]) &gt; a</code>则直接跳过第三层循环（k），减少无效计算。</li></ul><h2 id="时间复杂度">时间复杂度</h2><ul><li><p>对于数组长度 n，每个三元组枚举的时间复杂度为 O(n³)。由于题目约束 3 &lt;= n &lt;= 100，当 n = 100 时，最多循环大约 161700 次，在可接受的范围内。</p></li><li><p>除了输入数组与常数级变量外，未使用额外数据结构，因此空间复杂度为 O(1)。</p></li></ul><h2 id="代码实现">代码实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countGoodTriplets</span>(<span class="params">self, arr: <span class="type">List</span>[<span class="built_in">int</span>], a: <span class="built_in">int</span>, b: <span class="built_in">int</span>, c: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(arr)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i + <span class="number">1</span>, n):</span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">abs</span>(arr[i] - arr[j]) &gt; a:</span><br><span class="line">                    <span class="keyword">continue</span>  <span class="comment"># 提前剪枝，不满足a条件则跳过后续k的判断</span></span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(j + <span class="number">1</span>, n):</span><br><span class="line">                    <span class="comment"># 同时检查b和c的条件</span></span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">abs</span>(arr[j] - arr[k]) &lt;= b) <span class="keyword">and</span> (<span class="built_in">abs</span>(arr[i] - arr[k]) &lt;= c):</span><br><span class="line">                        count += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> count</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1&gt;&lt;a href=&quot;https://leetcode.cn/problems/count-good-triplets/&quot;&gt;1534. 统计好三元组&lt;/a&gt; E&lt;/h1&gt;
-&lt;p&gt;给你一个整数数组 &lt;code&gt;arr&lt;/code&gt; ，以及 &lt;code&gt;a&lt;/code&gt;、&lt;cod</summary>
-      
-    
-    
-    
-    <category term="算法" scheme="https://blog.icjlu.eu.org/categories/%E7%AE%97%E6%B3%95/"/>
-    
-    
-    <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
-    
-    <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
-    
-    <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
-    
-    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
     
   </entry>
   
