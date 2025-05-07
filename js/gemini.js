@@ -31,7 +31,7 @@ class GeminiAI {
      * AI Area
      */
     this.aiConfig = {
-      api: 'https://gemini.icjlu.eu.org/v1/chat/completions',
+      api: 'https://gemini-proxy.icjlu.eu.org/v1/chat/completions',
       tagConfig: {
          'content': '.post-content',
          'title': '.post-title',
@@ -42,7 +42,6 @@ class GeminiAI {
       temperature: 0.7,
       prompt: "You are a highly skilled AI trained in language comprehension and summarization. I would like you to read the text delimited by triple quotes and summarize it into a concise abstract paragraph. Aim to retain the most important points, providing a coherent and readable summary that could help a person understand the main points of the discussion without needing to read the entire text. Please avoid unnecessary details or tangential points. Only give me the output and nothing else. Do not wrap responses in quotes. Respond in the Chinese language.",
         headers: {
-         'Authorization': 'Bearer AIzaSyDY1LpNCc6yEr8wV8PgyZPUkV7Xsam1UpQ',
          'Content-Type': 'application/json',
       },
     };
