@@ -1,65 +1,210 @@
+/* gemini.css */
+:root {
+  --ai-summary-bg: #f3f4f6;
+  --ai-summary-text-color: #333333;
+  --ai-summary-border-color: #e5e7eb; /* 浅灰色边框 */
+  --ai-summary-card-radius: 10px; /* 卡片圆角 */
+
+  /* 头部和底部背景可以与主卡片背景不同，或更细微的灰色 */
+  /*--ai-summary-header-bg: #f8f9fa; */
+  --ai-summary-header-footer-bg: var(--ai-summary-bg);
+  --ai-summary-header-text-color: #4a5568;
+  --ai-summary-model-name-bg: #ffc107; /* 黄橙色 */
+  --ai-summary-model-name-text: #333333;
+  --ai-summary-footer-text-color: #718096; /* 模糊文本 */
+
+  /* button区域 */
+  --ai-summary-button-bg: #f5a623; /* 一个温暖的橙色 (原 #007ec6) */
+  --ai-summary-button-text: #ffffff;
+  --ai-summary-button-panda-offset: -25px; /* 熊猫重叠的大小 */
+  --ai-summary-panda-size: 60px; /* 按钮中的熊猫图像大小 */
+  /*--ai-summary-header-panda-size: 36px; /* 标题中的熊猫图像大小 */
+  /* 新增变量：装饰性熊猫和内部结果框 */
+  --ai-summary-decorative-panda-size: 100px; /* 卡片上方的大小熊猫尺寸 */
+  --ai-summary-decorative-panda-overlap: calc(var(--ai-summary-decorative-panda-size) / 3.5); /* 1/5 重叠 */
+  --ai-summary-result-bg: #ffffff; /* 内部结果框的背景（浅色主题） */
+  --ai-summary-result-border-color: #e0e0e0; /* 内部结果框的边框（浅色主题） */
+  --ai-summary-result-border-radius: 8px; /* 内部结果框的边框圆角 */
+}
+
+/* 示例暗黑模式变量（根据你的主题暗黑模式选择器调整） */
+/* 假设你的主题在 <body> 或 <html> 标签中添加了一个 'dark' 类 */
+/* 或使用 @media (prefers-color-scheme: dark) */
+html[data-theme="dark"] { /* 或 body.dark-mode 等 */
+  --ai-summary-bg: #252a33; /* 深色背景 */
+  --ai-summary-text-color: #e2e8f0; /* 浅色文本 */
+  --ai-summary-border-color: #3b4252; /* 更深的边框 */
+  /*--ai-summary-header-bg: #1a202c; /* 更暗的标题背景 */
+  --ai-summary-header-footer-bg: var(--ai-summary-bg); /* 头部和底部背景 */
+  --ai-summary-header-text-color: #cbd5e0;
+  /* --ai-summary-model-name-bg: #ddab35; /* 更深的黄色 */
+  /* --ai-summary-model-name-text: #ffffff; */
+  /* --ai-summary-button-bg: #ca8a04; /* 暗橙色 */
+  --ai-summary-footer-text-color: #a0aec0;
+  /* 按钮颜色可能保持相同或适应 */
+  /* 新增暗色主题下的内部结果框变量 */
+  --ai-summary-result-bg: #273041; /* 稍微比卡片背景亮一点以产生对比 */
+  --ai-summary-result-border-color: #404a5c; 
+}
+
 .post-gemini-ai {
+  margin-bottom: 0px; /* 组件底部的空间 */
+  margin-top: calc(var(--ai-summary-panda-size) / -3);
+  position: relative; /* 如需堆叠上下文，可用 */
+}
+
+/* 新增：大装饰性小熊猫的样式 */
+.ai-summary-decorative-panda-container {
+  position: absolute; /* 改为绝对定位 */
+  top: 0;             /* 定位到 .post-gemini-ai 容器的顶部 */
+  left: 8px;         /* 距离左边15px，可调整 */
+  transform: translateY(calc(-1 * (var(--ai-summary-decorative-panda-size) - var(--ai-summary-decorative-panda-overlap)))); /* 向上移动，使其底部重叠 */
+  z-index: 10;
+}
+
+.ai-summary-decorative-panda {
+  width: var(--ai-summary-decorative-panda-size);
+  height: var(--ai-summary-decorative-panda-size);
+  object-fit: contain;
+  pointer-events: none; /* 如果仅作装饰用途 */
+}
+
+.ai-summary-trigger-button {
+  display: inline-flex; /* 允许垂直对齐并防止换行 */
+  align-items: center;
+  padding: 10px 20px 10px calc(var(--ai-summary-panda-size) + var(--ai-summary-button-panda-offset) + 15px);  /* (上、右、下、左)调整熊猫的左侧填充 */
+  background-color: var(--ai-summary-button-bg);
+  color: var(--ai-summary-button-text);
+  border-radius: 8px;
   cursor: pointer;
-  width: max-content;
+  font-weight: bold;
+  position: relative; /* 用于熊猫定位 */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.post-gemini-ai > .ai-summary-img {
-  margin: 20px 0 !important;
+.ai-summary-trigger-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-.post-gemini-ai-result-wrap {
+.ai-summary-trigger-button .panda-button-img {
+  position: absolute;
+  left: var(--ai-summary-button-panda-offset);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--ai-summary-panda-size);
+  height: var(--ai-summary-panda-size);
+  object-fit: contain; /* 或 cover，取决于你的图像 */
+  pointer-events: none; /* 防止图片本身响应点击事件，让点击穿透到按钮 */
 }
 
-.post-gemini-ai-result {
-  display: inline;
+.ai-summary-trigger-button.hidden {
+  display: none !important;
 }
 
-.ai-typed-cursor {
-  opacity: 1;
-  animation: ai-type-blink 0.7s infinite;
+.ai-summary-card {
+  position: relative; /* 这对熊猫的绝对定位非常重要 */
+  background-color: var(--ai-summary-bg);
+  border: 1px solid var(--ai-summary-border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  /* margin-top: 15px; 已移除，由熊猫的负边距控制 */
+  overflow: visible; /* 允许熊猫重叠而不被裁剪（如果它是子元素） */
+                     /* 实际上，熊猫是兄弟元素，所以卡片的 overflow 对它没有影响 */
+                     /* 如果卡片有圆角，子元素需要突破边界，则需要 visible */
+  position: relative; /* 用于堆叠上下文 */
+  z-index: 1;         /* 卡片在熊猫下方 */
+  overflow: hidden;   /* 确保子元素的圆角裁切 */
+  margin-top: calc(var(--ai-summary-decorative-panda-size) / -4); /* 为熊猫腾出空间，并额外加一点间距 */
 }
 
-.post-gemini-noclick {
-  pointer-events: none;
+.ai-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 15px 5px 15px; /* 上、右、下、左：减少内边距以获得更窄的标题 */
+  background-color: var(--ai-summary-header-footer-bg);
+  /*border-bottom: 1px solid var(--ai-summary-border-color); */ /*移除边框线*/
 }
 
-@keyframes ai-type-blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
+.ai-summary-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 熊猫和文本之间的空间 */
+  font-weight: bold;
+  color: var(--ai-summary-header-text-color);
+}
+
+.ai-summary-header-title img { /* 已移除的标题小熊猫样式 */
+  display: none; /* 确保即使 HTML 没有及时更新也能隐藏 */
+}
+
+.ai-summary-model-name {
+  background-color: var(--ai-summary-model-name-bg);
+  color: var(--ai-summary-model-name-text);
+  padding: 4px 10px;
+  border-radius: 12px; /* 药丸形状 */
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.post-gemini-ai-result-content { /* 这个 div 负责提供外层卡片边缘到内层白色区域的间距 (padding) */
+  padding: 0px 15px; /* 上下内边距改为10px，左右保持15px */
+  background-color: transparent; /* 或者直接不写这一行，让它自然是父级背景 */
+  line-height: 1.7; /* 改进可读性 */
+}
+
+.post-gemini-ai-result { /* 这是 <p> 标签，现在作为内部卡片使用 */
+  background-color: var(--ai-summary-result-bg);
+  border: 1px solid var(--ai-summary-result-border-color);
+  border-radius: var(--ai-summary-result-border-radius);
+  padding: 12px 15px 12px 15px; /*  内部卡片的内边距(上、右、下、左) */
+  margin: 0; /* 重置 <p> 标签默认边距 */
+  margin-bottom: 0 !important; /* 使用 !important 提高优先级 */
+  line-height: 1.7;
+  /* 逐字符淡入的透明度和过渡（来自上一步） */
+  opacity: 1; /* “加载中...”文本的默认状态 */
+}
+
+.post-gemini-ai-result span.char-fade-in {
     opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    display: inline; /* 确保字符像文本一样流动 */
+    transition: opacity 0.3s ease-in-out; /* 可根据需要调整淡入持续时间 */
+    /* 保留空格，尤其是 span 内部的前后空格 */
+    white-space: pre-wrap;
 }
 
-.post-gemini-ai .ai-summary-active .ai-summary-icon-title text:first-of-type {
-    display: none !important;
+/*
+.post-gemini-ai-result.is-hidden {
+    opacity: 0;   不再用于块级淡出
 }
-.post-gemini-ai .ai-summary-active .ai-summary-icon-title text:last-child {
-    display: initial !important;
-}
-.post-gemini-ai .ai-summary-active #r rect {
-    width: 105px !important;
-}
-.post-gemini-ai .ai-summary-active .ai-summary-rect {
-    width: 80px !important;
-}
-.post-gemini-ai text::before {
-    content: attr(data-content)
-}
-.post-gemini-ai .ai-summary-pen {
-    opacity: 1;
-    animation: ai-wink 2s infinite;
+*/
+
+.ai-typed-cursor { /* 如果决定重新添加逐字符输入的光标效果 */
+  /* opacity: 1; */
+  /* animation: ai-type-blink 0.7s infinite; */
+  /* font-weight: bold; */
+  /* color: var(--ai-summary-text-color); */
+  display: none; /* 当前未使用逐字符淡入 */
 }
 
-@keyframes ai-wink {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+/*
+@keyframes ai-type-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+*/
+
+.ai-summary-footer {
+  padding: 2px 15px 2px 15px; /* 上、右、下、左 */
+  font-size: 0.8em;
+  color: var(--ai-summary-footer-text-color);
+  /*border-top: 1px solid var(--ai-summary-border-color);*/ /*移除边框线*/
+  background-color: var(--ai-summary-header-footer-bg); /* 与标题相同或不同 */
+}
+
+/* 用于 JavaScript 隐藏元素的实用类 */
+.display-none {
+  display: none !important;
 }

@@ -1,371 +1,272 @@
+// gemini.js
 function geminiAIImpl() {
-class GeminiAI {
-  constructor() {
-    this.initAI();
-  }
+  // console.log("geminiAIImpl function called");
 
-  initVariables() {
-    this.version = '1.1.2';
-
-    /**
-     * stream input area
-     */
-
-    /**
-     * unFinish code flag. half code symbol(`).
-     * eg: `some code input => <code data-code-input="">some code input</code>
-     */
-    this.unFinishFlag = 'data-code-input';
-    this.lastUnFinishCodeReg = new RegExp(`<code\\s${this.unFinishFlag}="">(.*?)<\\/code>`);
-    this.aiTextQueue = [];
-    // random number between 1 and 3
-    this.aiTextLimit = () => Math.max(Math.round(Math.random() * 3), 1);
-
-    /**
-     * Dom selector
-     */
-    // svg element
-    this.aiTriggerSelctor = '.ai-summary-trigger';
-
-    /**
-     * AI Area
-     */
-    this.aiConfig = {
-      api: 'https://gemini-proxy.icjlu.eu.org/v1/chat/completions',
-      tagConfig: {
-         'content': '.post-content',
-         'title': '.post-title',
-         'toc': '.toc-content',
-      },
-      maxToken: 2000,
-      model: 'gemini-2.0-flash',
-      temperature: 0.7,
-      prompt: "You are a highly skilled AI trained in language comprehension and summarization. I would like you to read the text delimited by triple quotes and summarize it into a concise abstract paragraph. Aim to retain the most important points, providing a coherent and readable summary that could help a person understand the main points of the discussion without needing to read the entire text. Please avoid unnecessary details or tangential points. Only give me the output and nothing else. Do not wrap responses in quotes. Respond in the Chinese language.",
-        headers: {
-         'Content-Type': 'application/json',
-      },
-    };
-
-    // ai-summaries wrap
-    this.postAI = document.querySelector('.post-gemini-ai');
-    this.postTile = document.querySelector(this.aiConfig.tagConfig.title)?.textContent;
-  }
-
-  initAI() {
-    this.initVariables();
-
-    // 没有postAI，说明不是文章页，无需继续执行！
-    if (!this.postAI) return;
-
-    queueMicrotask(() => {
-      this.initBrandInfo();
-      this.initAiTrigger();
-      this.initAiSummaries();
-    });
-  }
-
-  /**
-   * log brand information: https://patorjk.com/software/taag/#p=display&f=Doom&t=ai-summaries
-   */
-  initBrandInfo() {
-    if (this.initBrandBefore || window.initAIBrandBefore) {
-      return;
+  class GeminiAI {
+    constructor() {
+      this.initAI();
     }
-    const information = [
-      `  .--.  .-. .----..-. .-..-.   .-..-.   .-.  .--.  .----. .-..----. .----.
- / {} \\ | |{ {__  | { } ||  \`.'  ||  \`.'  | / {} \\ | {}  }| || {_  { {__
-/  /\\  \\| |.-._} }| {_} || |\\ /| || |\\ /| |/  /\\  \\| .-. \\| || {__ .-._} }
-\`-'  \`-'\`-'\`----' \`-----'\`-' \` \`-'\`-' \` \`-'\`-'  \`-'\`-' \`-'\`-'\`----'\`----' `,
-    ];
 
-    console.log(`%c WELCOME TO USE AI SUMMARIES.`, 'color:white; background-color:#4f90d9');
-    console.log(
-      `%cCURRENT VERSION: %cv${this.version}`,
-      '',
-      'color:white; background-color:#4fd953',
-    );
-    console.log(`%c${information[0]}`, 'color:#ff69b4;');
-    this.initBrandBefore = window.initAIBrandBefore = true;
-  }
+    initVariables() {
+      this.version = '1.1.x';
+      this.unFinishFlag = 'data-code-input';
+      this.lastUnFinishCodeReg = new RegExp(`<code\\s${this.unFinishFlag}="">(.*?)<\\/code>`);
 
-  /**
-   * init svg text, replace with data-content
-   * solve posts description
-   */
-  initAiTrigger() {
-    setTimeout(() => {
-      const trigger = document.querySelector(this.aiTriggerSelctor);
-      // 也建议加一个判空
-      if (!trigger) return;
-      const textEl = trigger.querySelectorAll('text');
-      textEl?.forEach((el) => {
-        el.textContent = el.dataset.content;
+      this.aiTriggerButtonSelector = '.ai-summary-trigger-button';
+      this.postAIContainerSelector = '.post-gemini-ai';
+      this.pandaButtonImagePath = 'https://e3f49eaa46b57.cdn.sohucs.com/2025/5/7/21/39/MTAwMTIyXzE3NDY2MjUxOTYzMDY=.png';
+      this.pandaSummaryImagePath = 'https://e3f49eaa46b57.cdn.sohucs.com/2025/5/7/23/22/MTAwMTIyXzE3NDY2MzEzNzY1MTg=.png';
+      
+      this.aiConfig = {
+        api: 'https://gemini-proxy.icjlu.eu.org/v1/chat/completions',
+        tagConfig: { 'content': '.post-content', 'title': '.post-title', 'toc': '.toc-content' },
+        maxToken: 2000,
+        model: 'gemini-2.0-flash',
+        modelDisplayName: 'Gemini 2.0',
+        temperature: 0.7,
+        prompt: "You are a highly skilled AI trained in language comprehension and summarization. I would like you to read the text delimited by triple quotes and summarize it into a concise abstract paragraph. Aim to retain the most important points, providing a coherent and readable summary that could help a person understand the main points of the discussion without needing to read the entire text. Please avoid unnecessary details or tangential points. Only give me the output and nothing else. Do not wrap responses in quotes. The response should be less than 150 words. Respond in the Chinese language.",
+        headers: { 'Content-Type': 'application/json' },
+        stream: false, // 或 true，根据你的 API 偏好
+      };
+      this.postAIContainer = document.querySelector(this.postAIContainerSelector);
+      this.postTile = document.querySelector(this.aiConfig.tagConfig.title)?.textContent;
+    }
+
+    initAI() {
+      this.initVariables();
+      if (!this.postAIContainer) return;
+      queueMicrotask(() => {
+        this.initBrandInfo();
+        this.initAiTriggerButton();
       });
-    });
-  }
-
-  initAiSummaries() {
-      // 也建议加一个判空
-      if (!this.postAI) return;
-      this.postAI.addEventListener('click', this.onAIClick.bind(this));
     }
 
-    /**
-     * @Description:
-     * @param {String} (content)
-     * @param {Element} (contentElement)
-     * @param {Boolean} (needEscape)
-     * @return String
-     */
-    parseCodeString(content, contentElement, needEscape) {
-      let replaceEscapeString = needEscape
-        ? content
+    initBrandInfo() {
+      if (this.initBrandBefore || window.initAIBrandBefore) return;
+      const information = [`╔═══════════════════╗\n║  STAY HUNGRY,     ║\n║                   ║\n║  STAY FOOLISH.    ║\n╚═══════════════════╝`];
+      console.log(`%c WELCOME TO VISIT MY BLOG.`, 'color:white; background-color:#4f90d9');
+      console.log(`%cCURRENT VERSION: %cv${this.version}`, '', 'color:white; background-color:#4fd953');
+      console.log(`%c${information[0]}`, 'color:#ff69b4;');
+      this.initBrandBefore = window.initAIBrandBefore = true;
+    }
+
+    initAiTriggerButton() {
+      if (!this.postAIContainer) return;
+      const triggerButton = this.postAIContainer.querySelector(this.aiTriggerButtonSelector);
+      if (!triggerButton) return;
+      const pandaBtnImg = triggerButton.querySelector('.panda-button-img');
+      if (pandaBtnImg && this.pandaButtonImagePath) pandaBtnImg.src = this.pandaButtonImagePath;
+      triggerButton.addEventListener('click', this.onAIClick.bind(this));
+    }
+    
+    // parseCodeString 可以简化或移除，如果 AI 输出是纯文本
+    // 目前保留用于潜在的复杂情况，但不用于此效果。
+    parseCodeString(content) {
+        let escapedContent = content
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-        : content;
-
-      const codeSymbol = '`';
-      let result = '';
-      let codeContent = '';
-      let isInCode = false;
-
-      const fullContent = contentElement.innerHTML;
-      const hasUnFinishCode = fullContent.includes(this.unFinishFlag);
-      // 处理未结束的 code
-      if (hasUnFinishCode) {
-        const codeEndIndex = replaceEscapeString.indexOf(codeSymbol);
-        // 说明当前 string 仍没有 end
-        if (codeEndIndex < 0) {
-          contentElement.innerHTML = fullContent.replace(
-            this.lastUnFinishCodeReg,
-            `<code ${this.unFinishFlag}>$1${replaceEscapeString}</code>`,
-          );
-          return '';
-        }
-
-        contentElement.innerHTML = fullContent.replace(
-          this.lastUnFinishCodeReg,
-          `<code>$1${replaceEscapeString.slice(0, codeEndIndex)}</code>`,
-        );
-
-        replaceEscapeString = replaceEscapeString.slice(codeEndIndex + 1);
-
-        if (!replaceEscapeString) {
-          return '';
-        }
-      }
-
-      /**
-       * 处理剩下 code
-       * 将字符串中符合条件的 code 内容，先储存，等遇到完整的 `` 的符号后再设置为标签
-       * 通过 isInCode 变量作为 flag，每次遇到 ` 符号时取反，默认 false
-       * 后面根据 isInCode 当前字符是否为 code 内容，再存储至 codeContent 变量中
-       *
-       * 若循环结束 isInCode 仍为 true，说明后面还有剩余的 code 内容，通过给 code 增加标签来处理
-       */
-      for (let i = 0; i < replaceEscapeString.length; i += 1) {
-        const str = replaceEscapeString[i];
-        if (str === codeSymbol) {
-          if (isInCode) {
-            // end code
-            result += `<code>${codeContent}</code>`;
-          }
-
-          codeContent = '';
-          isInCode = !isInCode;
-        } else if (isInCode) {
-          codeContent += str;
-        } else {
-          result += str;
-        }
-      }
-
-      // code 仍剩余
-      if (isInCode) {
-        result += `<code ${this.unFinishFlag}>${codeContent}</code>`;
-      }
-
-      return result;
+            .replace(/'/g, '&#39;');
+        return escapedContent.replace(/\n/g, '<br>');
     }
 
-    /**
-     * @Description: fakeStreamInput
-     * @param {String} (text)
-     * @param {Element} (element)
-     * @return
-     */
-    async fakeStreamInput(text, element) {
-      return new Promise(async (resolve) => {
-        if (text.length) {
-          this.aiTextQueue.push(text);
-        }
-        if (this.aiTextQueue.length === 0) {
-          resolve();
-          return;
-        }
-        const paragraph = this.aiTextQueue.shift();
-
-        const typeIn = async (textContent, index = 0) => {
-          if (!textContent.length || index >= textContent.length) {
-            await new Promise((resolveContent) => {
-              setTimeout(resolveContent);
-            });
-            resolve();
-            return;
-          }
-
-          const slicedContent = String(textContent).slice(index, index + this.aiTextLimit());
-          const nextContent = this.parseCodeString(slicedContent, element);
-
-          if (nextContent) {
-            element.innerHTML += nextContent;
-          }
-
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              typeIn(textContent, index + slicedContent.length);
-            });
-          }, 50);
-        };
-
-        typeIn(paragraph);
-      });
-    }
-
-    /**
-     * @Description:
-     * @param {Response} (response) openAI style response (only work on stream)
-     * @param {Element} (postAIResultEl)
-     */
-    async handleStreamResponse(response, postAIResultEl) {
-      /** @type {ReadableStreamDefaultReader<Uint8Array>} */
+    async handleStreamResponse(response) {
       const reader = response.body.getReader();
+      let fullText = "";
+      const decoder = new TextDecoder();
       while (true) {
         const { value, done } = await reader.read();
-        if (done) {
-          break;
-        }
-        const text = new TextDecoder().decode(value);
-        const strList = text.split('\n').filter(Boolean);
-
-        const str = strList.reduce((acc, currentValue) => {
-          if (currentValue.includes('DONE') || !currentValue.includes('data:')) {
-            return acc;
-          }
-
-          /**
-           * @type {{
-           *   choices: Array<{
-           *     delta: {
-           *       content?: string
-           *     }
-           *   }>
-           * \}}
-           */
-          const data = JSON.parse(currentValue.substring(6)); // remove "data: "
-          const nextStr = data?.choices[0].delta.content;
-          if (!nextStr) {
-            return acc;
-          }
-          return `${acc}${nextStr}`;
+        if (done) break;
+        const textChunk = decoder.decode(value, { stream: true });
+        const strList = textChunk.split('\n').filter(Boolean);
+        const chunkContent = strList.reduce((acc, currentValue) => {
+          if (currentValue.includes('DONE') || !currentValue.includes('data:')) return acc;
+          try {
+                const data = JSON.parse(currentValue.substring(6));
+                const nextStr = data?.choices[0].delta.content;
+                return nextStr ? `${acc}${nextStr}` : acc;
+          } catch (e) { console.warn("Error parsing stream data:", e, "Data:", currentValue); return acc; }
         }, '');
+        if (chunkContent) fullText += chunkContent;
+      }
+      const remaining = decoder.decode();
+      if (remaining) fullText += remaining;
+      return fullText;
+    }
 
-        await this.fakeStreamInput(str, postAIResultEl);
+    async handleJsonResponse(data) {
+      const content = data?.choices[0].message.content;
+      if (content) {
+        return content;
+      } else {
+        console.error("JSON response contains no content:", data);
+        return "Error: Could not retrieve summary.";
       }
     }
 
-    /**
-     * @Description:
-     * @param {Object<{ choices: [{ message: { content: String } }] }>} (data) openAI style data (only work on json)
-     * @param {Element} (postAIResultEl)
-     */
-    async handleJsonResponse(data, postAIResultEl) {
-      await this.fakeStreamInput(data?.choices[0].message.content, postAIResultEl);
-    }
+    initAiSummaryCard() {
+      // 如果重新生成，移除已存在的卡片结构
+      const existingPandaContainer = this.postAIContainer.querySelector('.ai-summary-decorative-panda-container');
+      if (existingPandaContainer) existingPandaContainer.remove();
+      const existingCard = this.postAIContainer.querySelector('.ai-summary-card');
+      if (existingCard) existingCard.remove();
 
-    initAiResult() {
-      this.postAI.insertAdjacentHTML(
-        'afterend',
-        '<div class="post-gemini-ai-result-wrap"> <div class="note primary no-icon flat"> <p class="post-gemini-ai-result"></p>  <span class="ai-typed-cursor">|</span></div> </div>',
-      );
-      this.postAI.classList.add('post-gemini-noclick');
+    // 1. 装饰性熊猫的HTML（放置在卡片上方）
+      const decorativePandaHTML = `
+        <div class="ai-summary-decorative-panda-container">
+          <img src="${this.pandaSummaryImagePath}" alt="" class="ai-summary-decorative-panda">
+        </div>
+      `;
+
+      const summaryCardHTML = `
+        <div class="ai-summary-card">
+          <div class="ai-summary-header">
+            <div class="ai-summary-header-title">
+              <span>文章摘要</span>
+            </div>
+            <span class="ai-summary-model-name">${this.aiConfig.modelDisplayName}</span>
+          </div>
+          <div class="post-gemini-ai-result-content">
+            <p class="post-gemini-ai-result"></p> 
+          </div>
+          <div class="ai-summary-footer">
+            AI榨汁机上线！挤干精华，只留文章“糟粕”，量少且管饱～
+          </div>
+        </div>
+      `;
+      // 将新的HTML元素插入到主AI容器中
+      // this.postAIContainer.innerHTML = decorativePandaHTML + summaryCardHTML; // 这将清除其他可能的子元素
+      // 如果postAIContainer可能有其他固定元素（例如按钮），则更安全的方法
+      // 假设按钮是同级元素，我们想在它之后或特定位置添加这些内容。
+      // 为简单起见，如果postAIContainer只包含触发按钮和卡片：
+      const triggerButton = this.postAIContainer.querySelector(this.aiTriggerButtonSelector);
+
+      // 在函数开始时已经清除了之前的摘要元素
+      // 插入熊猫和卡片。如果按钮存在，则在按钮后插入。
+      // 否则，追加到容器。
+      const combinedHTML = decorativePandaHTML + summaryCardHTML;
+      if (triggerButton && triggerButton.nextSibling) {
+          triggerButton.insertAdjacentHTML('afterend', combinedHTML);
+      } else if (triggerButton) {
+          // 如果触发按钮是最后一个子元素
+            this.postAIContainer.insertAdjacentHTML('beforeend', combinedHTML);
+      } else {
+          // 如果没有触发按钮（例如它被隐藏并移除了），则追加到容器
+            this.postAIContainer.innerHTML = combinedHTML; // 或者如果有其他内容，则追加
+      }
     }
 
     escapeHtml(str) {
-      return str
-        .replace(/\n/g, '')
-        .replace(/[ ]+/g, ' ')
-        .replace(/<pre>[\s\S]*?<\/pre>/g, '');
+      if (!str) return '';
+      return str.replace(/\n/g, ' ').replace(/[ ]+/g, ' ').replace(/<pre>[\s\S]*?<\/pre>/g, '').replace(/<code[^>]*>[\s\S]*?<\/code>/g, '').replace(/<[^>]+>/g, '');
+    }
+
+    async typeCharByCharFadeIn(text, element, charInterval = 30) { // charInterval 以毫秒为单位
+        element.innerHTML = ''; // 清除“加载中...”或之前的内容
+        const chars = text.split('');
+    
+        for (let i = 0; i < chars.length; i++) {
+            const char = chars[i];
+    
+            if (char === '\n') {
+                element.appendChild(document.createElement('br'));
+            } else {
+                const span = document.createElement('span');
+                span.textContent = char; // textContent 安全处理 HTML 实体
+                span.className = 'char-fade-in'; // 指定用于 CSS 过渡的类
+                element.appendChild(span);
+    
+                // 触发淡入效果
+                // 使用极短的 timeout 或 rAF 确保浏览器注册初始 opacity:0 后再将其设为 1
+                setTimeout(() => {
+                    span.style.opacity = '1';
+                }, 10); // 微小延迟以确保过渡触发
+            }
+    
+            if (i < chars.length - 1) { // 最后一个字符后不延迟
+                await new Promise(resolve => setTimeout(resolve, charInterval));
+            }
+        }
     }
 
     onAIClick = async () => {
-      const postAiTrigger = document.querySelector(this.aiTriggerSelctor);
+      const triggerButton = this.postAIContainer.querySelector(this.aiTriggerButtonSelector);
+      if (!triggerButton || triggerButton.classList.contains('hidden')) return;
+      
+      triggerButton.classList.add('hidden');
+      this.initAiSummaryCard(); 
 
-      this.initAiResult();
+      const postAIResultEl = this.postAIContainer.querySelector('.post-gemini-ai-result');
+      if (!postAIResultEl) {
+        triggerButton.classList.remove('hidden');
+        return;
+      }
+
+      postAIResultEl.textContent = "正在生成摘要，请稍候...";
+      //console.log('[DEBUG AI] 加载文本已设置。');
 
       try {
-        let postAIResult = document.querySelector('.post-gemini-ai-result');
-
-        // 也建议加一个判空
-        let contentElem = document.querySelector(this.aiConfig.tagConfig.content);
-        if (!contentElem) return;
+        const contentElem = document.querySelector(this.aiConfig.tagConfig.content);
+        if (!contentElem) throw new Error("未找到文章内容元素。");
         let input = contentElem.innerText;
-        //let input = document.querySelector(this.aiConfig.tagConfig.content).innerText;
-
         const postToc = document.querySelector(this.aiConfig.tagConfig.toc);
-        const updateTimeEl = document.querySelector('.post-meta-date-updated');
-        const updateTime = Date.parse(updateTimeEl.getAttribute('datetime'));
-
-        // 修改 trigger style
-        postAiTrigger.classList.add('ai-summary-active');
-
-        let inputContent = this.escapeHtml(input)
-          // max-token
-          .substring(0, this.aiConfig.maxToken);
-        let toAI = `文章标题：${this.postTile}；文章目录：${postToc?.textContent}；具体内容：${inputContent}`;
+        let inputContent = this.escapeHtml(input).substring(0, this.aiConfig.maxToken);
+        let toAI = `文章标题：${this.postTile || 'N/A'}；文章目录：${postToc?.textContent || 'N/A'}；具体内容："""${inputContent}"""`;
+      
         const res = await fetch(this.aiConfig.api, {
           method: 'POST',
           headers: this.aiConfig.headers,
           body: JSON.stringify({
             model: this.aiConfig.model,
-            messages: [
-              {
-                role: 'system',
-                content: this.aiConfig.prompt,
-              },
-              { role: 'user', content: toAI },
-            ],
+            messages: [{ role: 'system', content: this.aiConfig.prompt }, { role: 'user', content: toAI }],
             temperature: this.aiConfig.temperature,
             stream: this.aiConfig.stream,
-            updateTime,
-            title: this.postTile,
           }),
         });
 
         if (!res.ok) {
-          // 抛出错误，以便在 catch 块中捕获
-          throw new Error(`HTTP error! status: ${res.status}`);
+          const errorData = await res.json().catch(() => ({ message: `HTTP 错误! 状态: ${res.status}` }));
+          throw new Error(errorData.message || `HTTP 错误! 状态: ${res.status}`);
         }
 
+        let summaryText = "";
         const contentType = res.headers.get('Content-Type');
-        if (contentType && contentType.includes('text/event-stream')) {
-          // 处理 SSE
-          await this.handleStreamResponse(res, postAIResult);
-        } else if (contentType && contentType.includes('application/json')) {
-          // 处理 JSON
-          res.json().then((data) => this.handleJsonResponse(data, postAIResult));
-        } else {
-          throw new Error('Unsupported content type');
-        }
-      } catch (error) {
-        document.querySelector('.post-gemini-ai-result-wrap').remove();
-        console.log(error);
 
-        // 恢复 trigger style
-        postAiTrigger.classList.remove('ai-summary-active');
+        if (contentType && contentType.includes('text/event-stream') && (this.aiConfig.stream === true || this.aiConfig.stream === undefined)) {
+          summaryText = await this.handleStreamResponse(res);
+        } else if (contentType && contentType.includes('application/json')) {
+          const data = await res.json();
+          summaryText = await this.handleJsonResponse(data);
+        } else {
+          summaryText = await res.text();
+          if (!summaryText.trim()) throw new Error('API返回内容为空或不支持的内容类型。');
+        }
+        
+        //console.log(`[DEBUG AI] 已收到摘要文本（前50字符）: "${String(summaryText).substring(0,50)}"`);
+
+        // 调用新函数，逐个字符淡入显示文本
+        const charDisplayInterval = 30; // 每个字符显示之间的毫秒数。可调整速度。
+        await this.typeCharByCharFadeIn(summaryText, postAIResultEl, charDisplayInterval);
+        
+        //console.log('[DEBUG AI] 逐字符淡入完成。');
+
+      } catch (error) {
+        console.error("[ERROR AI] AI 摘要错误:", error.message);
+        if (postAIResultEl) {
+          // 显示错误信息，不逐字符显示
+          postAIResultEl.innerHTML = ''; // 清除加载信息
+          const errorSpan = document.createElement('span');
+          errorSpan.textContent = `抱歉，生成摘要时遇到问题：${error.message}`;
+          errorSpan.style.opacity = '1'; // 立即显示错误信息
+          postAIResultEl.appendChild(errorSpan);
+        }
+        // const summaryCard = this.postAIContainer.querySelector('.ai-summary-card');
+        // if (summaryCard) summaryCard.remove(); // 可考虑保留卡片以显示错误
+        if(triggerButton) triggerButton.classList.remove('hidden');
+      } finally {
+        // 此版本中不再需要隐藏光标
+        //console.log('[DEBUG AI] onAIClick: 逐字符淡入效果已完成。');
       }
     }
   }
@@ -373,4 +274,10 @@ class GeminiAI {
   new GeminiAI();
 }
 
-geminiAIImpl();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    geminiAIImpl();
+  });
+} else {
+  geminiAIImpl();
+}
