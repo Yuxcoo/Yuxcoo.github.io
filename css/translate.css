@@ -1,0 +1,147 @@
+/* source/css/translate.css */
+
+/* 
+   AI 翻译页面专属 CSS 样式。
+   本文件依赖于 gemini.css 中定义的 CSS 变量 (:root, html[data-theme="dark"])
+   以及 .ai-summary-card, .ai-summary-header, .ai-summary-footer, 
+   .post-gemini-ai-result-content, .post-gemini-ai-result, 
+   .ai-summary-decorative-panda-container, .ai-summary-decorative-panda 等样式。
+*/
+
+
+/*--------------------------------------------------------------------------
+  1. 整体页面容器样式
+--------------------------------------------------------------------------*/
+.translate-page-container {
+    max-width: 800px; /* 控制页面内容的宽度，可根据喜好调整 */
+    margin: 20px auto; /* 居中显示，顶部和底部留白 */
+    padding: 0 15px; /* 左右内边距，防止内容紧贴屏幕边缘 */
+    position: relative; /* 提供定位上下文，用于内部元素的绝对定位，特别是装饰性熊猫 */
+}
+
+/*--------------------------------------------------------------------------
+  2. 输入区域样式
+--------------------------------------------------------------------------*/
+.translate-input-area {
+    margin-bottom: 20px; /* 输入区域下方留白 */
+}
+
+.translate-input-area textarea {
+    width: 100%; /* 宽度占满容器 */
+    padding: 15px; /* 内边距 */
+    border: 1px solid var(--ai-summary-border-color); /* 边框颜色，使用变量适应主题 */
+    border-radius: var(--ai-summary-card-radius); /* 圆角，使用变量 */
+    background-color: var(--ai-summary-result-bg); /* 输入框背景颜色，与结果框一致，使用变量 */
+    color: var(--ai-summary-text-color); /* 文本颜色，使用变量 */
+    font-size: 1em; /* 字体大小 */
+    line-height: 1.6; /* 行高，提高可读性 */
+    box-sizing: border-box; /* 边框和内边距不增加元素总宽度 */
+    resize: vertical; /* 只允许垂直调整大小 */
+    min-height: 150px; /* 最小高度，确保足够的输入空间 */
+    font-family: inherit; /* 继承博客整体字体 */
+    transition: border-color 0.3s ease; /* 边框颜色过渡效果 */
+    outline: none; /* 移除默认聚焦时的外边框 */
+}
+
+.translate-input-area textarea:focus {
+     border-color: var(--ai-summary-button-bg); /* 聚焦时边框颜色变化，使用按钮背景色作为强调 */
+}
+
+/*--------------------------------------------------------------------------
+  3. 控制区域 (语言选择和按钮) 样式
+--------------------------------------------------------------------------*/
+.translate-controls {
+    display: flex; /* 使用 Flexbox 进行布局 */
+    flex-wrap: wrap; /* 允许在空间不足时换行 */
+    justify-content: space-between; /* 语言选择和按钮分开在两端 */
+    align-items: center; /* 垂直居中对齐 */
+    /* 为结果区域顶部的装饰性熊猫腾出空间，并额外加一点间距 */
+    margin-bottom: calc(var(--ai-summary-decorative-panda-size) / 1.2); 
+    gap: 15px; /* 项目之间的间隔 */
+}
+
+.translate-controls .language-select {
+    display: flex; /* 使用 Flexbox 对齐 label 和 select */
+    align-items: center; /* 垂直居中 */
+    gap: 8px; /* label和select之间的间隔 */
+    color: var(--ai-summary-text-color); /* 文本颜色 */
+    font-weight: bold; /* 字体加粗 */
+}
+
+.translate-controls select {
+    padding: 8px 12px; /* 内边距 */
+    border: 1px solid var(--ai-summary-border-color); /* 边框 */
+    border-radius: 5px; /* 圆角 */
+    background-color: var(--ai-summary-result-bg); /* 背景颜色，与输入/结果框一致 */
+    color: var(--ai-summary-text-color); /* 文本颜色 */
+    font-size: 1em; /* 字体大小 */
+    cursor: pointer; /* 鼠标悬停时显示手型光标 */
+    appearance: none; /* 移除浏览器默认的下拉箭头 */
+    /* 自定义下拉箭头 - 黑色 */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2C114.7L159.9%2C241.8c-3.9%2C3.9-10.2%2C3.9-14.1%2C0L5.4%2C114.7c-3.9-3.9-3.9-10.2%2C0-14.1s10.2-3.9%2C14.1%2C0L145.9%2C212l126.5-126.5c3.9-3.9%2C10.2-3.9%2C14.1%2C0S290.9%2C110.8%2C287%2C114.7z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat; /* 不重复背景图片 */
+    background-position: right 10px top 50%; /* 图片位置 */
+    background-size: 12px auto; /* 图片大小 */
+    padding-right: 30px; /* 为自定义箭头留出右侧空间 */
+}
+
+/* 暗黑模式下，改变自定义下拉箭头的颜色为浅色 */
+html[data-theme="dark"] .translate-controls select {
+    /* 自定义下拉箭头 - 浅色 */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e2e8f0%22%20d%3D%22M287%2C114.7L159.9%2C241.8c-3.9%2C3.9-10.2%2C3.9-14.1%2C0L5.4%2C114.7c-3.9-3.9-3.9-10.2%2C0-14.1s10.2-3.9%2C14.1%2C0L145.9%2C212l126.5-126.5c3.9-3.9%2C10.2-3.9%2C14.1%2C0S290.9%2C110.8%2C287%2C114.7z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+/* 按钮的通用样式 (.ai-summary-trigger-button) 已经在 gemini.css 中定义 */
+
+/*--------------------------------------------------------------------------
+  4. 翻译结果区域样式
+--------------------------------------------------------------------------*/
+.translate-result-container {
+    /* 与 .post-gemini-ai 容器类似，用于定位装饰性熊猫和卡片 */
+    position: relative;
+    /* 负上边距，让装饰性熊猫重叠到上方区域 */
+     margin-top: calc(var(--ai-summary-decorative-panda-size) / -3); 
+    margin-bottom: 20px; /* 结果区域下方留白 */
+    z-index: 1; /* 确保结果容器（包括卡片）在页面流中 */
+}
+
+/* 装饰性熊猫容器 (.ai-summary-decorative-panda-container) 和熊猫图片 (.ai-summary-decorative-panda) 
+   的样式已经在 gemini.css 中定义，并通过 HTML 结构重用。 */
+
+/* 翻译结果卡片 (.ai-summary-card) 及其内部元素 (.ai-summary-header, .ai-summary-header-title, 
+   .ai-summary-model-name, .post-gemini-ai-result-content, .post-gemini-ai-result, 
+   .ai-summary-footer) 的样式已经在 gemini.css 中定义，并通过 HTML 结构重用。 */
+
+/* .post-gemini-ai-result span.char-fade-in 字符渐显样式也已经在 gemini.css 中定义并重用 */
+
+
+/*--------------------------------------------------------------------------
+  5. 按钮状态样式
+--------------------------------------------------------------------------*/
+/* 隐藏按钮（例如，在显示结果卡片后隐藏触发按钮） */
+#translateButton.hidden {
+    display: none !important; /* 使用 !important 确保覆盖 */
+}
+
+/* 按钮加载状态 */
+.translate-button-loading .panda-button-img {
+    animation: spin 1s linear infinite; /* 旋转动画 */
+}
+
+/* 定义旋转动画 */
+@keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+.translate-button-loading span {
+    visibility: hidden; /* 隐藏按钮文本 */
+    /* 或者 opacity: 0; position: absolute; 等，确保空间不被占用 */
+}
+
+/* 禁用按钮时的样式（可选） */
+#translateButton:disabled {
+    opacity: 0.6; /* 半透明 */
+    cursor: not-allowed; /* 禁用光标 */
+}
+

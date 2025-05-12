@@ -60,6 +60,7 @@ html[data-theme="dark"] { /* 或 body.dark-mode 等 */
   left: 8px;         /* 距离左边15px，可调整 */
   transform: translateY(calc(-1 * (var(--ai-summary-decorative-panda-size) - var(--ai-summary-decorative-panda-overlap)))); /* 向上移动，使其底部重叠 */
   z-index: 10;
+  pointer-events: none; /* 如果仅作装饰用途 */
 }
 
 .ai-summary-decorative-panda {
