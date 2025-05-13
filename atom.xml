@@ -70,15 +70,15 @@
     
     <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
     
+    <category term="排列组合" scheme="https://blog.icjlu.eu.org/tags/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/"/>
+    
+    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
+    
     <category term="暴力搜索" scheme="https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/"/>
     
     <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
     
     <category term="简单" scheme="https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/"/>
-    
-    <category term="排列组合" scheme="https://blog.icjlu.eu.org/tags/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/"/>
-    
-    <category term="枚举与剪枝" scheme="https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/"/>
     
     <category term="哈希表" scheme="https://blog.icjlu.eu.org/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/"/>
     
@@ -193,13 +193,13 @@
     
     <category term="Algorithm" scheme="https://blog.icjlu.eu.org/tags/Algorithm/"/>
     
-    <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
-    
-    <category term="字符串处理" scheme="https://blog.icjlu.eu.org/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/"/>
-    
     <category term="排列组合" scheme="https://blog.icjlu.eu.org/tags/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/"/>
     
     <category term="困难" scheme="https://blog.icjlu.eu.org/tags/%E5%9B%B0%E9%9A%BE/"/>
+    
+    <category term="数位处理" scheme="https://blog.icjlu.eu.org/tags/%E6%95%B0%E4%BD%8D%E5%A4%84%E7%90%86/"/>
+    
+    <category term="字符串处理" scheme="https://blog.icjlu.eu.org/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/"/>
     
     <category term="组合数学" scheme="https://blog.icjlu.eu.org/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/"/>
     
@@ -436,9 +436,9 @@
     
     <category term="中等" scheme="https://blog.icjlu.eu.org/tags/%E4%B8%AD%E7%AD%89/"/>
     
-    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
-    
     <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    
+    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
     
   </entry>
   
@@ -467,11 +467,11 @@
     
     <category term="困难" scheme="https://blog.icjlu.eu.org/tags/%E5%9B%B0%E9%9A%BE/"/>
     
-    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
-    
     <category term="二分查找" scheme="https://blog.icjlu.eu.org/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     
     <category term="排序" scheme="https://blog.icjlu.eu.org/tags/%E6%8E%92%E5%BA%8F/"/>
+    
+    <category term="贪心" scheme="https://blog.icjlu.eu.org/tags/%E8%B4%AA%E5%BF%83/"/>
     
     <category term="有序集合" scheme="https://blog.icjlu.eu.org/tags/%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88/"/>
     
@@ -535,9 +535,9 @@
     
     <category term="滑动窗口" scheme="https://blog.icjlu.eu.org/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="前缀和" scheme="https://blog.icjlu.eu.org/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
-    
     <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    
+    <category term="前缀和" scheme="https://blog.icjlu.eu.org/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     
   </entry>
   
@@ -568,9 +568,9 @@
     
     <category term="滑动窗口" scheme="https://blog.icjlu.eu.org/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="前缀和" scheme="https://blog.icjlu.eu.org/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
-    
     <category term="双指针" scheme="https://blog.icjlu.eu.org/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    
+    <category term="前缀和" scheme="https://blog.icjlu.eu.org/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     
   </entry>
   
