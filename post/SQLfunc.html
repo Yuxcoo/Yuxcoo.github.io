@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/9/23/23/MTAwMTIyXzE3NDY4MDQyMTAxMDA=.jpg">
 <meta property="article:published_time" content="2025-03-30T11:53:01.000Z">
-<meta property="article:modified_time" content="2025-05-09T15:26:23.731Z">
+<meta property="article:modified_time" content="2025-05-13T14:22:52.674Z">
 <meta property="article:author" content="Yuxico">
 <meta property="article:tag" content="数据操作">
 <meta property="article:tag" content="SQL">
@@ -20,7 +20,7 @@
   "url": "https://blog.icjlu.eu.org/post/SQLfunc.html",
   "image": "https://e3f49eaa46b57.cdn.sohucs.com/2025/5/9/23/23/MTAwMTIyXzE3NDY4MDQyMTAxMDA=.jpg",
   "datePublished": "2025-03-30T11:53:01.000Z",
-  "dateModified": "2025-05-09T15:26:23.731Z",
+  "dateModified": "2025-05-13T14:22:52.674Z",
   "author": [
     {
       "@type": "Person",
@@ -201,7 +201,7 @@
     btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
     btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
   }
-})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://e3f49eaa46b57.cdn.sohucs.com/2025/5/9/23/23/MTAwMTIyXzE3NDY4MDQyMTAxMDA=.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/42/MTAwMTIyXzE3NDQ1NTE3NTYyMjk=.png" alt="Logo"><span class="site-name">Stay hungry. Stay foolish.</span></a><a class="nav-page-title" href="/"><span class="site-name">SQL常用函数补充</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">SQL常用函数补充</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-30T11:53:01.000Z" title="发表于 2025-03-30 19:53:01">2025-03-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-09T15:26:23.731Z" title="更新于 2025-05-09 23:26:23">2025-05-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><!-- body 开头或你希望触发按钮出现的地方--><div class="post-gemini-ai">
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://e3f49eaa46b57.cdn.sohucs.com/2025/5/9/23/23/MTAwMTIyXzE3NDY4MDQyMTAxMDA=.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/42/MTAwMTIyXzE3NDQ1NTE3NTYyMjk=.png" alt="Logo"><span class="site-name">Stay hungry. Stay foolish.</span></a><a class="nav-page-title" href="/"><span class="site-name">SQL常用函数补充</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">SQL常用函数补充</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-30T11:53:01.000Z" title="发表于 2025-03-30 19:53:01">2025-03-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-13T14:22:52.674Z" title="更新于 2025-05-13 22:22:52">2025-05-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><!-- body 开头或你希望触发按钮出现的地方--><div class="post-gemini-ai">
   <div class="ai-summary-trigger-button">
     <!-- 熊猫 1：将 src 替换为你的实际图像路径或保留占位符 -->
     <img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/7/21/39/MTAwMTIyXzE3NDY2MjUxOTYzMDY=.png" alt="" class="panda-button-img">
@@ -209,7 +209,7 @@
   </div>
   <!-- 摘要卡将由 JavaScript 插入此处 -->
 </div>
-<div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经过去&quot;,&quot;messageNext&quot;:&quot;天了，内容可能已经过时，请注意甄别内容呀！&quot;,&quot;postUpdate&quot;:&quot;2025-05-09 23:26:23&quot;}" hidden></div><h1>SQL 执行顺序与常用函数</h1>
+<div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经过去&quot;,&quot;messageNext&quot;:&quot;天了，内容可能已经过时，请注意甄别内容呀！&quot;,&quot;postUpdate&quot;:&quot;2025-05-13 22:22:52&quot;}" hidden></div><h1>SQL 执行顺序与常用函数</h1>
 <h2 id="🔄-SQL-语句执行顺序">🔄 SQL 语句执行顺序</h2>
 <ol>
 <li><strong>FROM</strong><br>
@@ -233,6 +233,78 @@
 <hr>
 <h2 id="常用函数汇总">常用函数汇总</h2>
 <h3 id="一、数学函数">一、数学函数</h3>
+<p><strong><code>CEIL(x) / CEILING(x)</code></strong></p>
+<ul>
+<li>
+<p><strong>功能</strong>：向上取整，返回大于或等于x的最小整数</p>
+</li>
+<li>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>x</code>：要取整的数值</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEIL(3.14)</td>
+<td>4</td>
+</tr>
+<tr>
+<td>CEIL(-3.14)</td>
+<td>-3</td>
+</tr>
+<tr>
+<td>CEILING(2.01)</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<hr>
+<p><strong><code>FLOOR(x)</code></strong></p>
+<ul>
+<li>
+<p><strong>功能</strong>：向下取整，返回小于或等于x的最大整数</p>
+</li>
+<li>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>x</code>：要取整的数值</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLOOR(3.97)</td>
+<td>3</td>
+</tr>
+<tr>
+<td>FLOOR(-3.14)</td>
+<td>-4</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<hr>
 <p><strong><code>ROUND(x, y)</code></strong></p>
 <ul>
 <li>
@@ -273,46 +345,132 @@
 <table>
 <thead>
 <tr>
-<th>函数</th>
+<th>函数名/用法</th>
 <th>功能说明</th>
 <th>示例</th>
+<th>示例结果</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>CONCAT(s1, s2,...)</code></td>
+<td><code>CONCAT(s1, s2, ...)</code></td>
 <td>连接字符串（含NULL则返回NULL）</td>
-<td>CONCAT(‘My’,’ ',‘SQL’)→My SQL      CONCAT(‘My’, NULL, ‘SQL’) → NULL</td>
+<td>CONCAT(‘My’,’ ',‘SQL’)</td>
+<td>My SQL</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>CONCAT(‘My’, NULL, ‘SQL’)</td>
+<td>NULL</td>
 </tr>
 <tr>
 <td><code>REPLACE(s, s1, s2)</code></td>
 <td>全量替换字符串</td>
-<td>REPLACE(‘MySQL’,‘SQL’,‘sql’) → Mysql</td>
+<td>REPLACE(‘MySQL’,‘SQL’,‘sql’)</td>
+<td>Mysql</td>
 </tr>
 <tr>
-<td><code>LEFT(s,n)/RIGHT(s,n)</code></td>
-<td>截取左/右侧n字符</td>
-<td>LEFT(‘abcdefg’,3) → abc</td>
+<td><code>LEFT(s, n)</code></td>
+<td>截取左侧n字符</td>
+<td>LEFT(‘abcdefg’, 3)</td>
+<td>abc</td>
+</tr>
+<tr>
+<td><code>RIGHT(s, n)</code></td>
+<td>截取右侧n字符</td>
+<td>RIGHT(‘abcdefg’, 3)</td>
+<td>efg</td>
 </tr>
 <tr>
 <td><code>SUBSTRING(s, n, len)</code></td>
 <td>从位置n截取len长度（支持负数位置）</td>
-<td>SUBSTRING(‘abcdefg’,-2,3) → fg SUBSTRING(‘abcdefg’,2)→bcdefg</td>
+<td>SUBSTRING(‘abcdefg’, -2, 3)</td>
+<td>fg</td>
 </tr>
 <tr>
-<td><code>LOWER()</code></td>
+<td></td>
+<td></td>
+<td>SUBSTRING(‘abcdefg’, 2)</td>
+<td>bcdefg</td>
+</tr>
+<tr>
+<td><code>LOWER(s)</code></td>
 <td>将字母变为小写</td>
-<td>LOWER(‘A’) → a</td>
+<td>LOWER(‘A’)</td>
+<td>a</td>
 </tr>
 <tr>
-<td><code>UPPER()</code></td>
+<td><code>UPPER(s)</code></td>
 <td>将字母变为大写</td>
-<td>UPPER(‘a’) → A</td>
+<td>UPPER(‘a’)</td>
+<td>A</td>
 </tr>
 <tr>
-<td><code>LENGTH()/CHAR_LENGTH()</code></td>
-<td>CHAR_LENGTH() 返回字符串的字符数，而 LENGTH() 返回字符串的字节数,对于 ASCII 字符，这两个函数的结果是相同的</td>
-<td>char_length(‘数’) = 1(字符)， length(‘数’) = 3(字节)</td>
+<td><code>CHAR_LENGTH(s)</code></td>
+<td>返回字符串的字符数</td>
+<td>CHAR_LENGTH(‘数’)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>LENGTH(s)</code></td>
+<td>返回字符串的字节数，对于 ASCII 字符，与<code>CHAR_LENGTH</code>的结果是相同的</td>
+<td>LENGTH(‘数’)</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>LOCATE(substr, s, [pos])</code></td>
+<td>返回substr在s中首次出现的位置，pos为起始</td>
+<td>LOCATE(‘b’, ‘abcde’)</td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>LOCATE(‘b’, ‘abcdebcd’, 3)</td>
+<td>6</td>
+</tr>
+<tr>
+<td><code>POSITION(substr IN s)</code></td>
+<td>返回substr在s中首次出现的位置</td>
+<td>POSITION(‘b’ IN ‘abcde’)</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>SUBSTRING_INDEX(s, d, n)</code></td>
+<td>以分隔符d分割，取第n段（正/负数）</td>
+<td>SUBSTRING_INDEX(‘a,b,c’, ‘,’, 2)</td>
+<td>a,b</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>SUBSTRING_INDEX(‘a,b,c’, ‘,’, -2)</td>
+<td>b,c</td>
+</tr>
+<tr>
+<td>TRIM(s)</td>
+<td>去除字符串两端的空格</td>
+<td>TRIM(’ abc ')</td>
+<td>abc</td>
+</tr>
+<tr>
+<td>TRIM([remstr FROM] s)</td>
+<td>去除字符串两端的指定字符</td>
+<td>TRIM(‘a’ FROM ‘aaabcaa’)</td>
+<td>bc</td>
+</tr>
+<tr>
+<td>TRIM(LEADING remstr FROM s)</td>
+<td>去除字符串左侧的指定字符</td>
+<td>TRIM(LEADING ‘a’ FROM ‘aaabcaa’)</td>
+<td>bcaa</td>
+</tr>
+<tr>
+<td>TRIM(TRAILING remstr FROM s)</td>
+<td>去除字符串右侧的指定字符</td>
+<td>TRIM(TRAILING ‘a’ FROM ‘aaabcaa’)</td>
+<td>aaabc</td>
 </tr>
 </tbody>
 </table>
