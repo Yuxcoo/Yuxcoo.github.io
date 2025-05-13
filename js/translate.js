@@ -28,7 +28,7 @@ function translateAIImpl() {
                 model: 'gemini-1.5-flash-latest', // 可以选用更新或更适合翻译的模型
                 modelDisplayName: 'Gemini 1.5 Flash', // 更新显示名称
                 temperature: 0.5, // 翻译通常用稍低温度以求准确
-                headers: { 'Content-Type': 'application/json' }, // 可能需要添加授权头 'Authorization': 'Bearer YOUR_API_KEY'
+                headers: { 'Content-Type': 'application/json' }, // 在serverless中添加授权头 'Authorization': 'Bearer YOUR_API_KEY'
                 stream: true,
             };
 
