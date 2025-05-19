@@ -1,0 +1,722 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>NumPy操作方式笔记 | Stay hungry. Stay foolish.</title><meta name="author" content="Yuxico"><meta name="copyright" content="Yuxico"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF5EE"><meta name="description" content="NumPy操作方式笔记 NumPy，全称为 Numerical Python，是Python语言中用于科学计算的基础库之一。它为Python提供了强大的多维数组和矩阵的支持，以及一套用于在这些数组上执行高性能计算的数学函数集合。NumPy的核心在于其引入的 ndarray 对象，这是一个可以存储同类型数据（如数字）的多维数组结构，为处理大型数据集提供了内存效率极高的存储和操作方式。与Python内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NumPy操作方式笔记">
+<meta property="og:url" content="https://blog.icjlu.eu.org/post/numpy.html">
+<meta property="og:site_name" content="Stay hungry. Stay foolish.">
+<meta property="og:description" content="NumPy操作方式笔记 NumPy，全称为 Numerical Python，是Python语言中用于科学计算的基础库之一。它为Python提供了强大的多维数组和矩阵的支持，以及一套用于在这些数组上执行高性能计算的数学函数集合。NumPy的核心在于其引入的 ndarray 对象，这是一个可以存储同类型数据（如数字）的多维数组结构，为处理大型数据集提供了内存效率极高的存储和操作方式。与Python内">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/47/MTAwMTIyXzE3NDc2NTg4NzAyNDA=.png">
+<meta property="article:published_time" content="2025-05-19T00:52:17.000Z">
+<meta property="article:modified_time" content="2025-05-19T12:48:42.972Z">
+<meta property="article:author" content="Yuxico">
+<meta property="article:tag" content="数据操作">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/47/MTAwMTIyXzE3NDc2NTg4NzAyNDA=.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "NumPy操作方式笔记",
+  "url": "https://blog.icjlu.eu.org/post/numpy.html",
+  "image": "https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/47/MTAwMTIyXzE3NDc2NTg4NzAyNDA=.png",
+  "datePublished": "2025-05-19T00:52:17.000Z",
+  "dateModified": "2025-05-19T12:48:42.972Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yuxico",
+      "url": "https://blog.icjlu.eu.org/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://blog.icjlu.eu.org/post/numpy.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#3E2B2D')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF5EE')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 7 || hour >= 21
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":2,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Yuxico","link":"链接: ","source":"来源: Stay hungry. Stay foolish.","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#FF7D4D","bgDark":"#3E2B2D","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'NumPy操作方式笔记',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!--– 仅在 AI 翻译页面加载 translate.css--><!--– 在这里手动插入 AI 摘要的样式表--><link rel="stylesheet" href="/hexo-ai-summaries/gemini.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Stay hungry. Stay foolish." type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">56</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/47/MTAwMTIyXzE3NDc2NTg4NzAyNDA=.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/42/MTAwMTIyXzE3NDQ1NTE3NTYyMjk=.png" alt="Logo"><span class="site-name">Stay hungry. Stay foolish.</span></a><a class="nav-page-title" href="/"><span class="site-name">NumPy操作方式笔记</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">NumPy操作方式笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-19T00:52:17.000Z" title="发表于 2025-05-19 08:52:17">2025-05-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-19T12:48:42.972Z" title="更新于 2025-05-19 20:48:42">2025-05-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">数据分析</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><!-- body 开头或你希望触发按钮出现的地方--><div class="post-gemini-ai">
+  <div class="ai-summary-trigger-button">
+    <!-- 熊猫 1：将 src 替换为你的实际图像路径或保留占位符 -->
+    <img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/7/21/39/MTAwMTIyXzE3NDY2MjUxOTYzMDY=.png" alt="" class="panda-button-img">
+    <span>点击获取AI摘要</span>
+  </div>
+  <!-- 摘要卡将由 JavaScript 插入此处 -->
+</div>
+<div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经过去&quot;,&quot;messageNext&quot;:&quot;天了，内容可能已经过时，请注意甄别内容呀！&quot;,&quot;postUpdate&quot;:&quot;2025-05-19 20:48:42&quot;}" hidden></div><h1>NumPy操作方式笔记</h1>
+<p>NumPy，全称为 Numerical Python，是Python语言中用于科学计算的基础库之一。它为Python提供了强大的多维数组和矩阵的支持，以及一套用于在这些数组上执行高性能计算的数学函数集合。NumPy的核心在于其引入的 <code>ndarray</code> 对象，这是一个可以存储同类型数据（如数字）的多维数组结构，为处理大型数据集提供了内存效率极高的存储和操作方式。与Python内置的列表不同，NumPy数组中的所有元素都必须是相同的数据类型，这一特性使得NumPy能够实现更快的运算速度。实际上，NumPy的许多操作都是通过优化过的C语言代码实现的，这使得其在处理数值计算任务时，性能远超使用标准Python列表和循环的实现方式。此外，NumPy还具备广播（broadcasting）功能，允许不同形状的数组之间进行运算，而无需显式地进行循环操作。这种设计极大地简化了代码，并提升了处理大规模数据的效率。</p>
+<h2 id="NumPy的重要性与优势">NumPy的重要性与优势</h2>
+<p>NumPy之所以在科学计算领域如此重要，原因在于其多方面的优势：</p>
+<ul>
+<li><strong>提升运算速度</strong>：它能够显著提升数学运算的速度，尤其是在处理包含大量数字的数组时，其效率远高于标准的Python实现。</li>
+<li><strong>简化数据处理</strong>：NumPy简化了对大型数值列表（即数组）的处理，避免了编写复杂的循环结构。</li>
+<li><strong>丰富的函数库</strong>：NumPy还提供了丰富的、可以直接使用的函数，用于执行统计分析、线性代数运算以及生成随机数等任务。</li>
+<li><strong>科学计算库的基础</strong>：更重要的是，NumPy是许多其他重要的科学计算库（如Pandas、SciPy、TensorFlow和scikit-learn）的基础。这些库在数据分析、高级科学计算和机器学习等领域发挥着关键作用，它们都依赖于NumPy数组作为其核心数据结构。</li>
+<li><strong>高效的内存管理</strong>：最后，与Python列表相比，NumPy在存储和管理大量数据时，占用的内存更少，效率更高，这对于处理庞大的数据集至关重要。</li>
+</ul>
+<h2 id="NumPy的应用领域">NumPy的应用领域</h2>
+<p>由于其强大的功能和高效的性能，NumPy被广泛应用于各种领域：</p>
+<ul>
+<li><strong>数据分析</strong>：NumPy可以用于创建、筛选和操作以数组形式存在的数据，并执行诸如计算均值和标准差等各种操作。</li>
+<li><strong>机器学习与人工智能</strong>：流行的工具如TensorFlow和PyTorch都使用NumPy来管理输入数据、处理模型参数和输出值。</li>
+<li><strong>数组操作</strong>：NumPy还提供了强大的数组操作功能，包括创建、调整大小、切片、索引、堆叠、分割和组合数组。</li>
+<li><strong>金融与经济</strong>：NumPy被用于财务分析，包括投资组合优化、风险评估、时间序列分析和统计建模。</li>
+<li><strong>图像与信号处理</strong>：NumPy能够帮助处理和分析图像和信号数据。</li>
+<li><strong>数据可视化</strong>：虽然NumPy本身不直接创建可视化图表，但它与Matplotlib和Seaborn等库紧密集成，可以从数值数据生成各种图表。</li>
+</ul>
+<p>NumPy的这些应用表明，无论是在基础的数据处理还是在复杂的算法实现中，它都扮演着至关重要的角色。</p>
+<h2 id="NumPy的安装与导入">NumPy的安装与导入</h2>
+<p>要开始使用NumPy，首先需要在Python环境中安装它。这可以通过Python的包管理器pip轻松完成，只需在命令行中运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy</span><br></pre></td></tr></table></figure>
+<p>这个命令会自动从Python的包索引中下载并安装NumPy及其依赖项。</p>
+<p>安装完成后，在Python代码中需要导入NumPy库才能使用其功能。按照惯例，我们通常会使用别名 <code>np</code> 来导入NumPy，即使用语句：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br></pre></td></tr></table></figure>
+<p>这样做的好处是，在后续的代码中，我们可以通过 <code>np</code> 这个更简洁的名称来引用NumPy的函数和对象，这提高了代码的可读性，并且是Python科学计算社区广泛采用的一种标准做法。这种一致性使得不同开发者编写的代码更容易被理解和协作。</p>
+<h2 id="NumPy的核心：ndarray对象">NumPy的核心：ndarray对象</h2>
+<p>NumPy的核心是其多维数组对象，即 <code>ndarray</code>。理解 <code>ndarray</code> 的核心属性对于有效地使用NumPy至关重要。</p>
+<ul>
+<li><strong>同质性</strong>：NumPy数组是同质的，这意味着数组中的所有元素都必须是相同的数据类型。这与Python列表可以包含不同类型的元素形成了鲜明的对比。同质性是NumPy实现高效数值计算的关键，因为它允许NumPy在内存中以连续的方式存储数据，并针对特定的数据类型进行优化。</li>
+<li><strong>多维性</strong>：NumPy数组可以是多维的。一维数组类似于Python中的列表，可以看作是向量。二维数组则更像是一个表格或矩阵，具有行和列。NumPy还支持更高维度的数组，例如三维数组可以想象成由多个二维数组堆叠而成，更高维度的数组在处理更复杂的数据结构时非常有用，通常被称为张量。</li>
+</ul>
+<h3 id="ndarray的核心属性">ndarray的核心属性</h3>
+<ul>
+<li><strong>形状 (shape)</strong>：描述数组结构的一个重要属性，它是一个由整数组成的元组，每个整数表示数组在相应维度上的大小。例如，对于一个二维数组，其形状表示为 <code>(行数, 列数)</code>。理解数组的形状对于进行需要兼容数组尺寸的操作（如算术运算和矩阵乘法）至关重要。</li>
+<li><strong>数据类型 (dtype)</strong>：指定了数组中元素的数据类型。NumPy支持多种数据类型，包括整数（如 <code>int64</code>）、浮点数（如 <code>float64</code>）、复数（如 <code>complex32</code>）等。在创建数组时，如果没有显式指定数据类型，NumPy通常会根据输入数据的类型进行推断，默认的数据类型通常是 <code>float64</code>。用户也可以在创建数组时通过 <code>dtype</code> 参数显式地指定所需的数据类型，这有助于更好地管理内存使用和控制计算精度。</li>
+<li>其他基本属性：
+<ul>
+<li><code>ndim</code>: 数组的维度（轴）的数量。</li>
+<li><code>size</code>: 数组中元素的总数。</li>
+<li><code>itemsize</code>: 数组中每个元素占用的字节数。</li>
+<li><code>data</code>: 一个缓冲区，包含了数组中实际的元素数据，但通常不直接使用。</li>
+</ul>
+</li>
+<li><strong>可变性</strong>：与Python列表类似，NumPy数组是可变的，这意味着在数组创建后，可以修改其元素的值。</li>
+</ul>
+<p>这些属性共同构成了对NumPy数组的基本理解，为后续学习更复杂的操作打下了基础。</p>
+<h2 id="创建NumPy数组">创建NumPy数组</h2>
+<p>创建NumPy数组有多种方法。</p>
+<ul>
+<li><strong>从Python序列创建</strong>：一种常见的方法是使用 <code>np.array()</code> 函数，该函数可以从常规的Python列表或元组创建NumPy数组。<code>np.array()</code> 会尝试根据序列中元素的类型推断出结果数组的数据类型。例如，如果传入的列表包含整数，则创建的数组将是整数类型的；如果包含浮点数，则数组将是浮点数类型的。对于多维数组，可以传入由列表组成的列表（或元组组成的元组），NumPy会将其转换为相应的多维数组结构。需要注意的是，在调用 <code>np.array()</code> 时，应该将要转换的序列作为一个单独的参数传入，而不是将序列中的元素作为多个独立的参数传入，否则会导致类型错误。</li>
+<li><strong>使用专门函数创建具有特定初始值的数组</strong>：
+<ul>
+<li><code>np.zeros(shape, dtype=float, order='C')</code>: 创建一个指定形状和数据类型的数组，并用零填充所有元素。例如，<code>np.zeros((3, 4))</code> 将创建一个 3 行 4 列的二维数组，所有元素都初始化为 <code>0.0</code>。</li>
+<li><code>np.ones(shape, dtype=None, order='C')</code>: 创建一个用 1 填充的数组。例如，<code>np.ones((2, 3, 4), dtype=np.int16)</code> 将创建一个 2x3x4 的三维数组，所有元素都初始化为整数 <code>1</code>。</li>
+<li><code>np.empty(shape, dtype=float, order='C')</code>: 创建一个指定形状和数据类型的数组，但不会对其进行初始化，数组中的初始值是内存中已有的任意数据。使用 <code>np.empty()</code> 的优势在于速度可能比 <code>np.zeros()</code> 或 <code>np.ones()</code> 快，因为它不需要进行初始化，但这也意味着在使用之前必须确保数组的所有元素都被赋予了有意义的值。</li>
+</ul>
+</li>
+<li><strong>创建数值序列</strong>：
+<ul>
+<li><code>np.arange([start,] stop[, step,], dtype=None, *, like=None)</code>: 类似于Python内置的 <code>range()</code> 函数，但返回的是一个NumPy数组。<code>np.arange()</code> 可以接受浮点数参数，例如 <code>np.arange(0, 2, 0.3)</code> 将生成 <code>[0. , 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]</code>。然而，当使用浮点数步长时，由于浮点数精度的限制，可能无法准确预测生成的元素数量。</li>
+<li><code>np.linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None, axis=0)</code>: 通常建议使用此函数来创建指定数量的在给定间隔内均匀分布的数值。<code>np.linspace()</code> 接收起始值、结束值以及期望生成的元素数量作为参数，例如 <code>np.linspace(0, 2, 9)</code> 将生成 9 个从 0 到 2（包含 2）均匀分布的数值。</li>
+</ul>
+</li>
+</ul>
+<p>这些函数为创建各种类型的NumPy数组提供了灵活的方式。</p>
+<h2 id="NumPy数组的基本操作">NumPy数组的基本操作</h2>
+<p>NumPy在数组上执行基本操作时，通常是**逐元素 (element-wise)**进行的。这意味着当对两个形状相同的数组进行算术运算时（例如加法、减法、乘法、除法、乘方和取模），运算会对应地应用到数组中的每个元素，并产生一个新的包含结果的数组。 例如，如果 <code>a = np.array([20, 30, 40, 50])</code> 且 <code>b = np.arange(4)</code>，那么 <code>a - b</code> 将得到 <code>array([20, 29, 38, 47])</code>，而 <code>b**2</code> 将得到 <code>array([0, 1, 4, 9])</code>。 同样，标量与数组之间的运算也会被广播到数组的每个元素上，例如 <code>10 * np.sin(a)</code> 会先计算数组 <code>a</code> 中每个元素的正弦值，然后将结果乘以 10。这种逐元素的操作方式使得对整个数据集进行数学运算变得简洁高效，无需编写显式的循环。</p>
+<h3 id="通用函数-ufuncs">通用函数 (ufuncs)</h3>
+<p>NumPy为这些基本的算术运算提供了相应的<strong>通用函数 (universal functions，简称 ufuncs)</strong>。例如：</p>
+<ul>
+<li><code>np.add()</code> 对应于加法 (<code>+</code>)</li>
+<li><code>np.subtract()</code> 对应于减法 (<code>-</code>)</li>
+<li><code>np.multiply()</code> 对应于乘法 (<code>*</code>)</li>
+<li><code>np.divide()</code> 对应于除法 (<code>/</code>)</li>
+<li><code>np.power()</code> 对应于乘方 (<code>**</code>)</li>
+<li><code>np.mod()</code> 对应于取模 (<code>%</code>)</li>
+</ul>
+<p>这些 ufuncs 不仅执行逐元素操作，而且通常经过高度优化，能够提供比标准Python操作更高的性能。它们是NumPy向量化操作的基础，直接在NumPy数组的内存缓冲区上操作，避免了为每个元素调用Python函数的开销。</p>
+<h3 id="其他数学函数">其他数学函数</h3>
+<p>除了基本的算术运算，NumPy还提供了大量的通用数学函数，这些函数同样以逐元素的方式应用于数组。这包括：</p>
+<ul>
+<li><strong>三角函数</strong>: 如 <code>np.sin()</code> (正弦)、<code>np.cos()</code> (余弦)、<code>np.tan()</code> (正切)、<code>np.arcsin()</code> (反正弦)等。</li>
+<li><strong>指数和对数函数</strong>: 如 <code>np.exp()</code> (指数)、<code>np.log()</code> (自然对数)、<code>np.log10()</code> (以 10 为底的对数)等。</li>
+<li><strong>舍入函数</strong>: 如 <code>np.round()</code> (四舍五入)、<code>np.floor()</code> (向下取整)、<code>np.ceil()</code> (向上取整)等。</li>
+<li><strong>绝对值函数</strong>: <code>np.abs()</code>。</li>
+</ul>
+<p>NumPy的文档中包含了完整的数学函数列表，这些函数极大地扩展了在NumPy数组上进行复杂数值计算的能力。</p>
+<h2 id="NumPy数组的索引和切片">NumPy数组的索引和切片</h2>
+<h3 id="单个元素访问">单个元素访问</h3>
+<p>访问NumPy数组中的单个元素与Python列表类似，都是通过索引来实现的，索引从 0 开始。</p>
+<ul>
+<li><strong>一维数组</strong>: 可以直接使用方括号内的索引来访问元素，例如 <code>a[0]</code> 将访问数组 <code>a</code> 的第一个元素。</li>
+<li><strong>多维数组</strong>: 可以使用逗号分隔的索引元组来访问特定位置的元素，每个索引对应数组的一个维度。例如，对于一个二维数组 <code>a</code>，<code>a[1, 3]</code> 将访问第二行（索引为 1）第四列（索引为 3）的元素。</li>
+<li><strong>负索引</strong>: NumPy还支持负索引，可以从数组的末尾开始计数，例如 <code>a[-1]</code> 将访问数组的最后一个元素。</li>
+</ul>
+<p>这种灵活的索引方式使得可以方便地访问数组中的特定元素。</p>
+<h3 id="切片-Slicing">切片 (Slicing)</h3>
+<p>除了访问单个元素，NumPy还提供了强大的切片（slicing）功能，用于提取数组的子数组。切片使用 <code>[start:stop:step]</code> 这样的表示法，其中 <code>start</code> 是切片的起始索引（包含），<code>stop</code> 是结束索引（不包含），<code>step</code> 是步长。</p>
+<ul>
+<li>如果没有指定 <code>start</code>，则默认为 0。</li>
+<li>如果没有指定 <code>stop</code>，则默认为数组的长度。</li>
+<li>如果没有指定 <code>step</code>，则默认为 1。</li>
+</ul>
+<p>一个重要的特性是，NumPy的切片操作创建的是原始数组的<strong>视图 (view)</strong>，而不是数据的副本。这意味着对切片进行修改会直接影响到原始数组。这种行为可以提高效率，避免不必要的数据复制，但需要注意，如果需要一个独立的副本，应该使用 <code>.copy()</code> 方法。</p>
+<p>对于多维数组，切片可以应用于每个维度，通过逗号分隔每个维度的切片规格。例如：</p>
+<ul>
+<li><code>a[0:2, :]</code> 选择数组 <code>a</code> 的前两行（所有列）。</li>
+<li><code>a[:, 1:4]</code> 选择所有行的第 2 到第 4 列（不包括第 4 列）。</li>
+<li><code>a[1, :]</code> 选择第二行的所有元素。</li>
+<li><code>a[:, 2]</code> 选择第三列的所有元素。</li>
+</ul>
+<h3 id="高级索引">高级索引</h3>
+<p>NumPy还支持更高级的索引方式。</p>
+<ul>
+<li><strong>布尔数组索引 (Boolean array indexing / Masking)</strong>：通过创建一个与原始数组形状相同的布尔数组作为索引，可以根据布尔数组中 <code>True</code> 值对应的位置来选择原始数组中的元素。例如，<code>a[a &gt; 5]</code> 将选择数组 <code>a</code> 中所有大于 5 的元素。布尔索引是根据条件过滤数据的强大工具。</li>
+<li><strong>整数数组索引 (Integer array indexing / Fancy indexing)</strong>：通过传递一个包含整数索引的NumPy数组作为索引，可以选择原始数组中特定位置的元素。这允许以非连续的方式选择元素，甚至可以重复选择相同的元素。例如，<code>a[[0, 2, 4]]</code> 将选择数组 <code>a</code> 中索引为 0、2 和 4 的元素。对于二维数组，可以传递两个整数数组，分别表示要选择的元素的行索引和列索引。例如，<code>a[[0, 1, 2], [0, 1, 0]]</code> 将选择位于 <code>(0, 0)</code>、<code>(1, 1)</code> 和 <code>(2, 0)</code> 的元素。与基本的切片不同，整数数组索引<strong>总是返回原始数据的一个副本</strong>。</li>
+</ul>
+<h2 id="NumPy数组的形状操作">NumPy数组的形状操作</h2>
+<p>NumPy提供了多种方法来改变数组的形状而不改变其数据内容。</p>
+<ul>
+<li><strong>ndarray.reshape(new_shape, order=‘C’)</strong>: 将数组重塑为指定的形状，<code>new_shape</code> 参数是一个表示新形状的元组。重要的是，重塑后的数组必须包含与原始数组相同数量的元素。如果可能，<code>reshape()</code> 会返回原始数组的一个视图，否则会返回一个副本。例如，如果 <code>a</code> 是一个包含 12 个元素的一维数组，<code>a.reshape((3, 4))</code> 将其转换为一个 3 行 4 列的二维数组。</li>
+<li><strong>数组的扁平化 (Flattening)</strong>：是将多维数组转换为一维数组的过程。
+<ul>
+<li><code>ndarray.flatten(order='C')</code>: 返回一个原始数组的副本，并将其展平为一维数组。</li>
+<li><code>ndarray.ravel(order='C')</code>: 也执行相同的操作，但它会尝试返回原始数组的视图，只有在必要时才会返回副本，因此在可能的情况下，<code>ravel()</code> 通常比 <code>flatten()</code> 更节省内存。 例如，对于一个多维数组 <code>a</code>，<code>a.flatten()</code> 和 <code>a.ravel()</code> 都会得到一个包含相同元素的一维数组。</li>
+</ul>
+</li>
+<li><strong>转置 (Transposing)</strong>：是另一种常见的数组形状操作。对于二维数组（矩阵），转置会交换其行和列。在NumPy中，可以使用 <code>ndarray.T</code> 属性来获取数组的转置视图，或者使用 <code>np.transpose(a, axes=None)</code> 函数，该函数返回一个转置后的数组。通过 <code>axes</code> 参数，可以指定更复杂的轴交换顺序。例如，对于一个数组 <code>a</code>，<code>a.T</code> 或 <code>np.transpose(a)</code> 将返回其转置。转置在线性代数中非常重要，例如在进行矩阵乘法时，可能需要先对矩阵进行转置。</li>
+</ul>
+<p>这些形状操作为处理和组织NumPy数组中的数据提供了灵活性。</p>
+<h2 id="NumPy的线性代数运算">NumPy的线性代数运算</h2>
+<p>NumPy还为线性代数运算提供了强大的支持。</p>
+<ul>
+<li><strong>点积 (Dot product)</strong>：可以使用 <code>np.dot(a, b)</code> 函数来计算两个数组的点积。
+<ul>
+<li>如果 <code>a</code> 和 <code>b</code> 都是一维数组，<code>np.dot()</code> 返回向量的内积。</li>
+<li>如果它们都是二维数组，则执行矩阵乘法（在较新的NumPy版本中，推荐使用 <code>np.matmul()</code> 或 <code>a @ b</code> 进行矩阵乘法）。</li>
+<li>对于更高维度的数组，点积的计算方式更为复杂，涉及到最后一个轴的求和乘积。 点积是线性代数中的基本运算，广泛应用于物理学和机器学习等领域。</li>
+</ul>
+</li>
+<li><strong>矩阵乘法 (Matrix multiplication)</strong>：可以使用 <code>np.matmul(a, b)</code> 或 <code>a @ b</code> 来执行。对于二维数组，这是标准的矩阵乘法。需要注意的是，进行矩阵乘法时，第一个矩阵的列数必须等于第二个矩阵的行数。</li>
+<li><strong>逐元素乘法 (Element-wise multiplication)</strong>：可以使用 <code>np.multiply(a, b)</code> 或简单的 <code>a * b</code> 来实现，它将两个形状相同的数组中对应位置的元素相乘。这与矩阵乘法是不同的。</li>
+</ul>
+<h3 id="linalg-模块"><code>linalg</code> 模块</h3>
+<p>NumPy的 <code>linalg</code> 模块还包含许多其他有用的线性代数函数，例如：</p>
+<ul>
+<li><code>np.linalg.solve(a, b)</code>: 求解线性方程组 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>。</li>
+<li><code>np.linalg.inv(a)</code>: 计算矩阵的逆。</li>
+<li><code>np.linalg.eig(a)</code>: 计算方阵的特征值和特征向量。</li>
+<li><code>np.linalg.det(a)</code>: 计算矩阵的行列式。</li>
+<li><code>np.linalg.norm(x)</code>: 计算矩阵或向量的范数。</li>
+</ul>
+<p>这些函数构成了进行高级数值计算和解决复杂数学问题的基础。</p>
+<h2 id="NumPy的随机数生成">NumPy的随机数生成</h2>
+<p>NumPy还提供了强大的随机数生成功能，这些功能在模拟、机器学习等领域非常有用。</p>
+<ul>
+<li><code>np.random.rand(d0, d1,..., dn)</code>: 创建一个指定形状的数组，并用从均匀分布（区间 <code>[0, 1)</code>）中抽取的随机浮点数填充。例如，<code>np.random.rand(5)</code> 将创建一个包含 5 个随机数的 1D 数组，而 <code>np.random.rand(2, 3)</code> 将创建一个 2x3 的随机数数组。</li>
+<li><code>np.random.randn(d0, d1,..., dn)</code>: 类似，但它从标准正态分布（均值为 0，方差为 1）中抽取随机数。</li>
+<li><code>np.random.randint(low, high=None, size=None, dtype=int)</code>: 返回在指定范围内（从 <code>low</code>（包含）到 <code>high</code>（不包含））的随机整数，形状由 <code>size</code> 参数指定。如果只提供一个参数，则返回 0 到该参数之间的随机整数。例如，<code>np.random.randint(10, size=5)</code> 将创建一个包含 5 个 0 到 9 之间随机整数的数组。</li>
+</ul>
+<p>对于更新的NumPy代码（版本 1.17 及更高版本），推荐使用 <code>np.random.default_rng()</code> 创建一个随机数生成器对象，该对象提供了更结构化的方式来生成来自各种分布的随机数，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rng = np.random.default_rng()</span><br><span class="line">random_array = rng.random((3, 2)) # 使用 random 而非 rand</span><br><span class="line">random_integers = rng.integers(0, 10, size=5)</span><br></pre></td></tr></table></figure>
+<p>这种方式提供了更好的控制和更广泛的分布选择。</p>
+<h2 id="NumPy数组的复制与视图">NumPy数组的复制与视图</h2>
+<p>在使用NumPy数组时，理解**复制 (copy)<strong>数组和创建</strong>视图 (view)**之间的区别非常重要。</p>
+<ul>
+<li><strong>赋值操作 (b = a)</strong>: 并不会创建数组 <code>a</code> 的一个新副本，而是使 <code>b</code> 成为对 <code>a</code> 所指向的同一数组对象的另一个引用。这意味着，如果修改 <code>b</code> 中的元素，<code>a</code> 中的相应元素也会被修改。</li>
+<li><strong>切片操作 (b = a[0:5])</strong>: 通常会创建原始数组的一个视图。视图本质上是原始数组数据的一个窗口，它本身不存储任何数据，而是引用原始数组的一部分。因此，通过视图对数组进行的修改可能会影响到原始数组。</li>
+<li><strong>.copy() 方法 (b = a.copy())</strong>: 如果需要创建数组及其数据的完全独立副本，应该使用 <code>.copy()</code> 方法。在这种情况下，对 <code>b</code> 的修改不会影响到 <code>a</code>。</li>
+</ul>
+<p>理解这种行为对于避免在程序中出现意外的副作用至关重要。</p>
+<h2 id="NumPy数组的保存与加载">NumPy数组的保存与加载</h2>
+<p>NumPy还提供了方便的方法来将数组数据保存到磁盘以及从磁盘加载数组数据。</p>
+<ul>
+<li><code>np.save('filename.npy', array)</code>: 将单个NumPy数组以二进制格式保存到扩展名为 <code>.npy</code> 的文件中。</li>
+<li><code>np.load('filename.npy')</code>: 将保存的数组从 <code>.npy</code> 文件加载回来。</li>
+<li><code>np.savetxt('filename.txt', array)</code>: 将数组保存到文本文件中。</li>
+<li><code>np.loadtxt('filename.txt')</code>: 从文本文件中加载数组。</li>
+<li><code>np.genfromtxt('data.txt', delimiter=',')</code>: 可以从文本文件加载数据，并且更灵活，可以处理缺失值和不同的数据类型。</li>
+</ul>
+<p>这些功能使得NumPy能够有效地处理大型数据集，这些数据集可能无法一次性加载到内存中。</p>
+<h2 id="总结">总结</h2>
+<p>NumPy作为Python科学计算的核心库，为处理多维数组和执行数值计算提供了强大且高效的工具。通过理解NumPy数组的特性、掌握创建数组的多种方式、熟悉基本的逐元素操作和数学函数、灵活运用索引和切片技术、以及了解数组形状的变换和基本的线性代数运算，Python初学者可以为后续更深入的数据分析、机器学习和科学研究打下坚实的基础。理解复制和视图的区别以及学会保存和加载数组数据，将有助于更有效地管理和处理实际应用中的数据。NumPy的高效性和广泛的功能使其成为Python科学计算生态系统中不可或缺的一部分。</p>
+<h2 id="NumPy数组创建函数比较表">NumPy数组创建函数比较表</h2>
+<table>
+<thead>
+<tr>
+<th>函数名称</th>
+<th>描述</th>
+<th>主要参数</th>
+<th>用途示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>np.array</code></td>
+<td>从列表、元组或其他序列创建数组</td>
+<td><code>object</code> (要转换的序列), <code>dtype</code> (数据类型), <code>copy</code> (是否复制)</td>
+<td><code>np.array([1,2,3])</code>, <code>np.array([[1,2], [3,4]])</code></td>
+</tr>
+<tr>
+<td><code>np.zeros</code></td>
+<td>创建一个用零填充的数组</td>
+<td><code>shape</code> (数组形状), <code>dtype</code> (数据类型)</td>
+<td><code>np.zeros((2, 3))</code>, <code>np.zeros(5, dtype=int)</code></td>
+</tr>
+<tr>
+<td><code>np.ones</code></td>
+<td>创建一个用一填充的数组</td>
+<td><code>shape</code> (数组形状), <code>dtype</code> (数据类型)</td>
+<td><code>np.ones((3, 2))</code>, <code>np.ones((2, 2), dtype=float)</code></td>
+</tr>
+<tr>
+<td><code>np.empty</code></td>
+<td>创建一个未初始化的数组</td>
+<td><code>shape</code> (数组形状), <code>dtype</code> (数据类型)</td>
+<td><code>np.empty((2, 2))</code>, <code>np.empty(3, dtype=complex)</code></td>
+</tr>
+<tr>
+<td><code>np.arange</code></td>
+<td>在给定范围内创建均匀间隔的值的数组</td>
+<td><code>start</code> (起始值), <code>stop</code> (结束值), <code>step</code> (步长), <code>dtype</code> (数据类型)</td>
+<td><code>np.arange(0, 10, 2)</code>, <code>np.arange(5)</code></td>
+</tr>
+<tr>
+<td><code>np.linspace</code></td>
+<td>在指定间隔内创建均匀间隔的数字序列</td>
+<td><code>start</code> (起始值), <code>stop</code> (结束值), <code>num</code> (元素数量), <code>dtype</code> (数据类型)</td>
+<td><code>np.linspace(0, 1, 5)</code>, <code>np.linspace(0, np.pi, 10)</code></td>
+</tr>
+<tr>
+<td><code>np.full</code></td>
+<td>创建一个用指定值填充的数组</td>
+<td><code>shape</code> (数组形状), <code>fill_value</code> (填充值), <code>dtype</code> (数据类型)</td>
+<td><code>np.full((2, 2), 7)</code>, <code>np.full(5, 'test', dtype=object)</code></td>
+</tr>
+<tr>
+<td><code>np.eye</code></td>
+<td>创建一个单位矩阵</td>
+<td><code>N</code> (行数), <code>M</code> (列数，可选), <code>k</code> (对角线索引), <code>dtype</code> (数据类型)</td>
+<td><code>np.eye(3)</code>, <code>np.eye(4, M=5, k=1)</code></td>
+</tr>
+<tr>
+<td><code>np.diag</code></td>
+<td>提取对角线或创建对角数组</td>
+<td><code>v</code> (对角线元素), <code>k</code> (对角线索引)</td>
+<td><code>np.diag([1,2,3])</code>, <code>np.diag(np.array([[1,2], [3,4]]))</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="基本算术通用函数比较表">基本算术通用函数比较表</h2>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>等效通用函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+</code></td>
+<td><code>np.add</code></td>
+<td>逐元素相加</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td><code>np.subtract</code></td>
+<td>逐元素相减</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td><code>np.multiply</code></td>
+<td>逐元素相乘</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td><code>np.divide</code></td>
+<td>逐元素相除</td>
+</tr>
+<tr>
+<td><code>**</code></td>
+<td><code>np.power</code></td>
+<td>逐元素乘方</td>
+</tr>
+<tr>
+<td><code>%</code></td>
+<td><code>np.mod</code></td>
+<td>逐元素取模（余数）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="数组扁平化方法比较表">数组扁平化方法比较表</h2>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>返回值</th>
+<th>内存效率</th>
+<th>对原始数组的影响</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>flatten()</code></td>
+<td>原始数组的副本</td>
+<td>较低</td>
+<td>不影响</td>
+<td>需要一个原始数组的独立副本时</td>
+</tr>
+<tr>
+<td><code>ravel()</code></td>
+<td>原始数组的视图</td>
+<td>较高</td>
+<td>可能影响</td>
+<td>当不需要副本且希望尽可能节省内存时</td>
+</tr>
+</tbody>
+</table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org">Yuxico</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org/post/numpy.html">https://blog.icjlu.eu.org/post/numpy.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.icjlu.eu.org" target="_blank">Stay hungry. Stay foolish.</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/">数据操作</a><a class="post-meta__tags" href="/tags/python/">python</a></div><div class="post-share"><div class="social-share" data-image="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/47/MTAwMTIyXzE3NDc2NTg4NzAyNDA=.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/post/data-cleaning.html" title="Python 与数据清洗"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/21/38/MTAwMTIyXzE3NDc2NjE4OTc3NTA=.png" onerror="onerror=null;src='/img/404.png'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Python 与数据清洗</div></div><div class="info-2"><div class="info-item-1">Python 与数据清洗 1....</div></div></div></a><a class="pagination-related" href="/post/pandas.html" title="Pandas操作方式笔记"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/43/MTAwMTIyXzE3NDc2NTg2MDc3MjM=.png" onerror="onerror=null;src='/img/404.png'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Pandas操作方式笔记</div></div><div class="info-2"><div class="info-item-1">Pandas 操作方式笔记 1. Pandas 简介 Pandas 是一个在 Python 编程语言中广泛使用的数据操作和分析的开源库。它建立在另一个基础库 NumPy 之上，NumPy...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/pandas.html" title="Pandas操作方式笔记"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/43/MTAwMTIyXzE3NDc2NTg2MDc3MjM=.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-19</div><div class="info-item-2">Pandas操作方式笔记</div></div><div class="info-2"><div class="info-item-1">Pandas 操作方式笔记 1. Pandas 简介 Pandas 是一个在 Python 编程语言中广泛使用的数据操作和分析的开源库。它建立在另一个基础库 NumPy 之上，NumPy...</div></div></div></a><a class="pagination-related" href="/post/data-cleaning.html" title="Python 与数据清洗"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/21/38/MTAwMTIyXzE3NDc2NjE4OTc3NTA=.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-19</div><div class="info-item-2">Python 与数据清洗</div></div><div class="info-2"><div class="info-item-1">Python 与数据清洗 1....</div></div></div></a><a class="pagination-related" href="/post/Tableau.html" title="Tableau分析与可视化看板"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s21.ax1x.com/2025/04/14/pEWa8FU.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-14</div><div class="info-item-2">Tableau分析与可视化看板</div></div><div class="info-2"><div class="info-item-1">Tableau数据连接与可视化分析 本文主要介绍 Tableau...</div></div></div></a><a class="pagination-related" href="/post/excelfunc.html" title="Excel函数使用与周报开发"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/9/23/23/MTAwMTIyXzE3NDY4MDQyMTU1NDQ=.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-11</div><div class="info-item-2">Excel函数使用与周报开发</div></div><div class="info-2"><div class="info-item-1">Excel 知识笔记 本文主要介绍 Excel...</div></div></div></a><a class="pagination-related" href="/post/SQLfunc.html" title="SQL常用函数补充"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/9/23/23/MTAwMTIyXzE3NDY4MDQyMTAxMDA=.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-30</div><div class="info-item-2">SQL常用函数补充</div></div><div class="info-2"><div class="info-item-1">SQL 执行顺序与常用函数 🔄 SQL 语句执行顺序  FROM 从数据库复制原始表（生成临时表） WHERE 在临时表中筛选符合条件的数据行 GROUP...</div></div></div></a><a class="pagination-related" href="/post/SQLba.html" title="SQL基础"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2024/03/15/2FsIWTqfuboHtEy.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-11</div><div class="info-item-2">SQL基础</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yuxico</div><div class="author-info-description">生如逆旅，一苇以航</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">56</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yuxcoo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Yuxcoo" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yuxicon@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://space.bilibili.com/533860721" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00aeec;"></i></a><a class="social-icon" href="https://twitter.com/yxico_cjlu" target="_blank" title="Twitter"><i class="fab fa-x-twitter" style="color: #0f1419;"></i></a><a class="social-icon" href="https://t.me/+Z8s3eL8dhgA3YWRl" target="_blank" title="Telegram"><i class="fab fa-telegram" style="color: #4b9dee;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">请赐予我宁静，<br>
+去接受我所不能改变的；<br>
+赐予我勇气，<br>
+去改变我所能改变的；<br>
+并赐予我智慧，<br>
+去分辨这两者的差别。
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">NumPy操作方式笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.</span> <span class="toc-text">NumPy的重要性与优势</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E7%9A%84%E5%BA%94%E7%94%A8%E9%A2%86%E5%9F%9F"><span class="toc-number">1.2.</span> <span class="toc-text">NumPy的应用领域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%AF%BC%E5%85%A5"><span class="toc-number">1.3.</span> <span class="toc-text">NumPy的安装与导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E7%9A%84%E6%A0%B8%E5%BF%83%EF%BC%9Andarray%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.4.</span> <span class="toc-text">NumPy的核心：ndarray对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ndarray%E7%9A%84%E6%A0%B8%E5%BF%83%E5%B1%9E%E6%80%A7"><span class="toc-number">1.4.1.</span> <span class="toc-text">ndarray的核心属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BANumPy%E6%95%B0%E7%BB%84"><span class="toc-number">1.5.</span> <span class="toc-text">创建NumPy数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E6%95%B0%E7%BB%84%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">1.6.</span> <span class="toc-text">NumPy数组的基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%87%BD%E6%95%B0-ufuncs"><span class="toc-number">1.6.1.</span> <span class="toc-text">通用函数 (ufuncs)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="toc-number">1.6.2.</span> <span class="toc-text">其他数学函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E6%95%B0%E7%BB%84%E7%9A%84%E7%B4%A2%E5%BC%95%E5%92%8C%E5%88%87%E7%89%87"><span class="toc-number">1.7.</span> <span class="toc-text">NumPy数组的索引和切片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E5%85%83%E7%B4%A0%E8%AE%BF%E9%97%AE"><span class="toc-number">1.7.1.</span> <span class="toc-text">单个元素访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E7%89%87-Slicing"><span class="toc-number">1.7.2.</span> <span class="toc-text">切片 (Slicing)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E7%B4%A2%E5%BC%95"><span class="toc-number">1.7.3.</span> <span class="toc-text">高级索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E6%95%B0%E7%BB%84%E7%9A%84%E5%BD%A2%E7%8A%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">1.8.</span> <span class="toc-text">NumPy数组的形状操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E7%9A%84%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E8%BF%90%E7%AE%97"><span class="toc-number">1.9.</span> <span class="toc-text">NumPy的线性代数运算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#linalg-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.9.1.</span> <span class="toc-text">linalg 模块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90"><span class="toc-number">1.10.</span> <span class="toc-text">NumPy的随机数生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E6%95%B0%E7%BB%84%E7%9A%84%E5%A4%8D%E5%88%B6%E4%B8%8E%E8%A7%86%E5%9B%BE"><span class="toc-number">1.11.</span> <span class="toc-text">NumPy数组的复制与视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E6%95%B0%E7%BB%84%E7%9A%84%E4%BF%9D%E5%AD%98%E4%B8%8E%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.12.</span> <span class="toc-text">NumPy数组的保存与加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.13.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NumPy%E6%95%B0%E7%BB%84%E5%88%9B%E5%BB%BA%E5%87%BD%E6%95%B0%E6%AF%94%E8%BE%83%E8%A1%A8"><span class="toc-number">1.14.</span> <span class="toc-text">NumPy数组创建函数比较表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%AE%97%E6%9C%AF%E9%80%9A%E7%94%A8%E5%87%BD%E6%95%B0%E6%AF%94%E8%BE%83%E8%A1%A8"><span class="toc-number">1.15.</span> <span class="toc-text">基本算术通用函数比较表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%89%81%E5%B9%B3%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83%E8%A1%A8"><span class="toc-number">1.16.</span> <span class="toc-text">数组扁平化方法比较表</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/type-of-triangle.html" title="LeetCode每日一题2025-05-19"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/19/qL2a8TvFSg6DjbI.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-19"/></a><div class="content"><a class="title" href="/post/type-of-triangle.html" title="LeetCode每日一题2025-05-19">LeetCode每日一题2025-05-19</a><time datetime="2025-05-19T08:13:48.000Z" title="发表于 2025-05-19 16:13:48">2025-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/pandas.html" title="Pandas操作方式笔记"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/43/MTAwMTIyXzE3NDc2NTg2MDc3MjM=.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="Pandas操作方式笔记"/></a><div class="content"><a class="title" href="/post/pandas.html" title="Pandas操作方式笔记">Pandas操作方式笔记</a><time datetime="2025-05-19T00:52:19.000Z" title="发表于 2025-05-19 08:52:19">2025-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/numpy.html" title="NumPy操作方式笔记"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/47/MTAwMTIyXzE3NDc2NTg4NzAyNDA=.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="NumPy操作方式笔记"/></a><div class="content"><a class="title" href="/post/numpy.html" title="NumPy操作方式笔记">NumPy操作方式笔记</a><time datetime="2025-05-19T00:52:17.000Z" title="发表于 2025-05-19 08:52:17">2025-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/data-cleaning.html" title="Python 与数据清洗"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/21/38/MTAwMTIyXzE3NDc2NjE4OTc3NTA=.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="Python 与数据清洗"/></a><div class="content"><a class="title" href="/post/data-cleaning.html" title="Python 与数据清洗">Python 与数据清洗</a><time datetime="2025-05-19T00:52:10.000Z" title="发表于 2025-05-19 08:52:10">2025-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/count-equal-and-divisible-pairs.html" title="LeetCode每日一题2025-05-18"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/18/cvjsYtbh5NDxiVQ.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-18"/></a><div class="content"><a class="title" href="/post/count-equal-and-divisible-pairs.html" title="LeetCode每日一题2025-05-18">LeetCode每日一题2025-05-18</a><time datetime="2025-05-18T08:25:55.000Z" title="发表于 2025-05-18 16:25:55">2025-05-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/21/MTAwMTIyXzE3NDQ1NTA0NjkyNTM=.png);"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Yuxico</div><div class="runtime"><span id="runtimeshow"><i class="fas fa-clock"></i><span class="runtime-text">时间已奔赴 </span><span id="runtime_days"></span><span>天 </span><span id="runtime_hours"></span><span>小时 </span><span id="runtime_minutes"></span><span>分钟 </span><span id="runtime_seconds"></span><span>秒</span></span></div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div><script>function updateRuntime() {
+  const start = new Date("2022-01-01 00:00:00");
+  const now = new Date();
+  const diff = now - start;
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  document.getElementById("runtime_days").innerHTML = days;
+  document.getElementById("runtime_hours").innerHTML = hours;
+  document.getElementById("runtime_minutes").innerHTML = minutes;
+  document.getElementById("runtime_seconds").innerHTML = seconds;
+}
+
+setInterval(updateRuntime, 1000);
+updateRuntime();</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天" style="display:none"><i class="fas fa-message"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="Ruby,Python,JavaScript,TypeScript,HTML,CSS,Vue,React,Node.js,R,C#,C++,Matlab,SAS,PHP,Go,SQL" data-fontsize="16px" data-random="true" async="async"></script><script>(() => {
+  btf.getScript('//code.tidio.co/gcpmbfallv68ddoa0zzuekn6jcrc5m5v.js').then(() => {
+    const isChatBtn = true
+    const isChatHideShow = true
+
+    if (isChatBtn) {
+      let isShow = false
+      const close = () => {
+        window.tidioChatApi.hide()
+        isShow = false
+      }
+      
+      const open = () => {
+        window.tidioChatApi.open()
+        window.tidioChatApi.show()
+        isShow = true
+      }
+
+      const onTidioChatApiReady = () => {
+        window.tidioChatApi.hide()
+        window.tidioChatApi.on("close", close)
+      }
+      if (window.tidioChatApi) {
+        window.tidioChatApi.on("ready", onTidioChatApiReady)
+      } else {
+        document.addEventListener("tidioChat-ready", onTidioChatApiReady)
+      }
+
+      window.chatBtnFn = () => {
+        if (!window.tidioChatApi) return
+        isShow ? close() : open()
+      }
+
+      document.getElementById('chat-btn').style.display = 'block'
+
+    } else if (isChatHideShow) {
+      window.chatBtn = {
+        hide: () => window.tidioChatApi && window.tidioChatApi.hide(),
+        show: () => window.tidioChatApi && window.tidioChatApi.show()
+      }
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章或任意内容..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!--– 在页面底部手动插入 AI 摘要的脚本--><script defer src="/hexo-ai-summaries/gemini.js"></script><!--– 仅在 AI 翻译页面加载 translate.js--></body></html>

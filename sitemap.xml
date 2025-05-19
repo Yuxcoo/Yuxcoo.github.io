@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.icjlu.eu.org/post/data-cleaning.html</loc>
+    
+    <lastmod>2025-05-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/post/numpy.html</loc>
+    
+    <lastmod>2025-05-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/post/pandas.html</loc>
+    
+    <lastmod>2025-05-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.icjlu.eu.org/post/type-of-triangle.html</loc>
     
     <lastmod>2025-05-19</lastmod>
@@ -561,27 +588,6 @@
   </url>
   
   <url>
-    <loc>https://blog.icjlu.eu.org/tags/blog/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.icjlu.eu.org/tags/nginx/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.icjlu.eu.org/tags/vps/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.icjlu.eu.org/tags/%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -603,6 +609,27 @@
   </url>
   
   <url>
+    <loc>https://blog.icjlu.eu.org/tags/blog/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/tags/nginx/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/tags/vps/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.icjlu.eu.org/tags/Algorithm/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -611,20 +638,6 @@
   
   <url>
     <loc>https://blog.icjlu.eu.org/tags/%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -645,6 +658,13 @@
   </url>
   
   <url>
+    <loc>https://blog.icjlu.eu.org/tags/%E7%AE%80%E5%8D%95/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.icjlu.eu.org/tags/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -653,6 +673,13 @@
   
   <url>
     <loc>https://blog.icjlu.eu.org/tags/%E5%9B%9E%E6%96%87%E6%95%B0%E6%9E%84%E9%80%A0/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/tags/%E6%9E%9A%E4%B8%BE%E4%B8%8E%E5%89%AA%E6%9E%9D/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -708,13 +735,6 @@
   </url>
   
   <url>
-    <loc>https://blog.icjlu.eu.org/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.icjlu.eu.org/tags/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -723,6 +743,13 @@
   
   <url>
     <loc>https://blog.icjlu.eu.org/tags/%E9%80%86%E5%BA%8F%E5%AF%B9%E8%AE%A1%E6%95%B0/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -792,6 +819,13 @@
   </url>
   
   <url>
+    <loc>https://blog.icjlu.eu.org/tags/%E7%8A%B6%E6%80%81%E5%BB%BA%E6%A8%A1/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.icjlu.eu.org/tags/%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -814,13 +848,6 @@
   
   <url>
     <loc>https://blog.icjlu.eu.org/tags/BFS/</loc>
-    <lastmod>2025-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.icjlu.eu.org/tags/%E7%8A%B6%E6%80%81%E5%BB%BA%E6%A8%A1/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -856,6 +883,13 @@
   
   <url>
     <loc>https://blog.icjlu.eu.org/tags/linux/</loc>
+    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.icjlu.eu.org/tags/python/</loc>
     <lastmod>2025-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
