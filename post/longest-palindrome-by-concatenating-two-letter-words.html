@@ -1,0 +1,525 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LeetCode每日一题2025-05-25 | Stay hungry. Stay foolish.</title><meta name="author" content="Yuxico"><meta name="copyright" content="Yuxico"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF5EE"><meta name="description" content="2131. 连接两字母单词得到的最长回文串 M 给你一个字符串数组 words 。words 中每个元素都是一个包含 两个 小写英文字母的单词。 请你从 words 中选择一些元素并按 任意顺序 连接它们，并得到一个 尽可能长的回文串 。每个元素 至多 只能使用一次。 请你返回你能得到的最长回文串的 长度 。如果没办法得到任何一个回文串，请你返回 0 。 回文串 指的是从前往后和从后往前读一样的字">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode每日一题2025-05-25">
+<meta property="og:url" content="https://blog.icjlu.eu.org/post/longest-palindrome-by-concatenating-two-letter-words.html">
+<meta property="og:site_name" content="Stay hungry. Stay foolish.">
+<meta property="og:description" content="2131. 连接两字母单词得到的最长回文串 M 给你一个字符串数组 words 。words 中每个元素都是一个包含 两个 小写英文字母的单词。 请你从 words 中选择一些元素并按 任意顺序 连接它们，并得到一个 尽可能长的回文串 。每个元素 至多 只能使用一次。 请你返回你能得到的最长回文串的 长度 。如果没办法得到任何一个回文串，请你返回 0 。 回文串 指的是从前往后和从后往前读一样的字">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png">
+<meta property="article:published_time" content="2025-05-25T09:11:01.000Z">
+<meta property="article:modified_time" content="2025-05-25T09:31:22.289Z">
+<meta property="article:author" content="Yuxico">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="字符串处理">
+<meta property="article:tag" content="回文数构造">
+<meta property="article:tag" content="中等">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="贪心">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "LeetCode每日一题2025-05-25",
+  "url": "https://blog.icjlu.eu.org/post/longest-palindrome-by-concatenating-two-letter-words.html",
+  "image": "https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png",
+  "datePublished": "2025-05-25T09:11:01.000Z",
+  "dateModified": "2025-05-25T09:31:22.289Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yuxico",
+      "url": "https://blog.icjlu.eu.org/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://blog.icjlu.eu.org/post/longest-palindrome-by-concatenating-two-letter-words.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#3E2B2D')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF5EE')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 7 || hour >= 21
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":2,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Yuxico","link":"链接: ","source":"来源: Stay hungry. Stay foolish.","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#FF7D4D","bgDark":"#3E2B2D","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LeetCode每日一题2025-05-25',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!--– 仅在 AI 翻译页面加载 translate.css--><!--– 在这里手动插入 AI 摘要的样式表--><link rel="stylesheet" href="/hexo-ai-summaries/gemini.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Stay hungry. Stay foolish." type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/42/MTAwMTIyXzE3NDQ1NTE3NTYyMjk=.png" alt="Logo"><span class="site-name">Stay hungry. Stay foolish.</span></a><a class="nav-page-title" href="/"><span class="site-name">LeetCode每日一题2025-05-25</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">LeetCode每日一题2025-05-25</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-25T09:11:01.000Z" title="发表于 2025-05-25 17:11:01">2025-05-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-25T09:31:22.289Z" title="更新于 2025-05-25 17:31:22">2025-05-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><!-- body 开头或你希望触发按钮出现的地方--><div class="post-gemini-ai">
+  <div class="ai-summary-trigger-button">
+    <!-- 熊猫 1：将 src 替换为你的实际图像路径或保留占位符 -->
+    <img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/7/21/39/MTAwMTIyXzE3NDY2MjUxOTYzMDY=.png" alt="" class="panda-button-img">
+    <span>点击获取AI摘要</span>
+  </div>
+  <!-- 摘要卡将由 JavaScript 插入此处 -->
+</div>
+<div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经过去&quot;,&quot;messageNext&quot;:&quot;天了，内容可能已经过时，请注意甄别内容呀！&quot;,&quot;postUpdate&quot;:&quot;2025-05-25 17:31:22&quot;}" hidden></div><h1><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-palindrome-by-concatenating-two-letter-words/">2131. 连接两字母单词得到的最长回文串</a> M</h1>
+<p>给你一个字符串数组 <code>words</code> 。<code>words</code> 中每个元素都是一个包含 <strong>两个</strong> 小写英文字母的单词。</p>
+<p>请你从 <code>words</code> 中选择一些元素并按 <strong>任意顺序</strong> 连接它们，并得到一个 <strong>尽可能长的回文串</strong> 。每个元素 <strong>至多</strong> 只能使用一次。</p>
+<p>请你返回你能得到的最长回文串的 <strong>长度</strong> 。如果没办法得到任何一个回文串，请你返回 <code>0</code> 。</p>
+<p><strong>回文串</strong> 指的是从前往后和从后往前读一样的字符串。</p>
+<p><strong>示例 1：</strong></p>
+<blockquote>
+<p>输入：words = [“lc”,“cl”,“gg”]<br>
+输出：6<br>
+解释：一个最长的回文串为 “lc” + “gg” + “cl” = “lcggcl” ，长度为 6 。<br>
+“clgglc” 是另一个可以得到的最长回文串。</p>
+</blockquote>
+<p><strong>示例 2：</strong></p>
+<blockquote>
+<p>输入：words = [“ab”,“ty”,“yt”,“lc”,“cl”,“ab”]<br>
+输出：8<br>
+解释：最长回文串是 “ty” + “lc” + “cl” + “yt” = “tylcclyt” ，长度为 8 。<br>
+“lcyttycl” 是另一个可以得到的最长回文串。</p>
+</blockquote>
+<p><strong>示例 3：</strong></p>
+<blockquote>
+<p>输入：words = [“cc”,“ll”,“xx”]<br>
+输出：2<br>
+解释：最长回文串是 “cc” ，长度为 2 。<br>
+“ll” 是另一个可以得到的最长回文串。“xx” 也是。</p>
+</blockquote>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= words.length &lt;= 10⁵</code></li>
+<li><code>words[i].length == 2</code></li>
+<li><code>words[i]</code> 仅包含小写英文字母。</li>
+</ul>
+<h2 id="问题分析">问题分析</h2>
+<p>给定一个包含若干长度为 2 的小写字母单词的数组 <code>words</code>。需要从中选取若干个单词，按任意顺序拼接成一个回文串（正读和反读相同），每个单词最多只能使用一次。目标是让拼接得到的回文串长度尽可能长，返回最终回文串的长度。</p>
+<ol>
+<li><strong>所有单词长度恒为 2</strong>，记为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>1</mn></msub><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_1w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</li>
+<li>回文串可以分成 <strong>两种贡献来源</strong>：
+<ul>
+<li><strong>互为逆序的不同单词成对放在回文串两侧</strong>，例如 “ab” 与 “ba” 各贡献 2 个字符放在左侧和右侧，共计 4。</li>
+<li><strong>自身即回文的单词放在中间</strong>，例如 “gg”、“aa”，如果两两配对放在两侧，每对依旧贡献 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span>；如果剩下一个用于回文中心，则贡献 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>。</li>
+</ul>
+</li>
+<li>要保证每个单词至多使用一次，且对于自身回文的单词只能最多取一个放在“中心位置”。</li>
+</ol>
+<p>因此，思路是通过哈希表统计每个单词的出现次数，再针对上述两种情况进行贪心匹配。</p>
+<h2 id="算法思路">算法思路</h2>
+<ol>
+<li>
+<p><strong>统计单词频次</strong><br>
+使用 <code>Counter</code>（哈希表）统计数组 <code>words</code> 中每个二字母单词的出现次数，记为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>w</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\text{cnt}[w]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mclose">]</span></span></span></span>。</p>
+</li>
+<li>
+<p><strong>遍历哈希表配对</strong><br>
+对于哈希表中的每个单词 <code>word</code>，令 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mtext>cnt</mtext><mo stretchy="false">[</mo><mtext>word</mtext><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">c = \text{cnt}[ \text{word} ]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord text"><span class="mord">word</span></span><span class="mclose">]</span></span></span></span>：</p>
+<ul>
+<li>令 <code>rev = word[::-1]</code>，即取单词的逆序。</li>
+<li><strong>情况 A：<code>word == rev</code>（自身回文）</strong>
+<ul>
+<li>将可以成对放在两侧的数量计算为 $ \left\lfloor \frac{c}{2} \right\rfloor $，每对贡献长度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span>；更新 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo stretchy="false">]</mo><mo>−</mo><mo>=</mo><mn>2</mn><mo>×</mo><mrow><mo fence="true">⌊</mo><mfrac><mi>c</mi><mn>2</mn></mfrac><mo fence="true">⌋</mo></mrow></mrow><annotation encoding="application/x-tex">\text{cnt}[word] -= 2 \times \left\lfloor \frac{c}{2} \right\rfloor</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">d</span><span class="mclose">]</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">⌊</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">⌋</span></span></span></span></span></span>。</li>
+<li>若此时 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo stretchy="false">]</mo><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>2</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\text{cnt}[word] \bmod 2 = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">d</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 且尚未使用中心位置（用布尔变量 <code>used_center</code> 标记），则取一个放在回文中心，贡献长度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>，并将 <code>used_center = True</code>，同时 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo stretchy="false">]</mo><mo>−</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\text{cnt}[word] -= 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">d</span><span class="mclose">]</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>。</li>
+</ul>
+</li>
+<li><strong>情况 B：<code>word != rev</code>（与逆序单词匹配）</strong>
+<ul>
+<li>若逆序单词 <code>rev</code> 也在哈希表中且 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false">]</mo><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\text{cnt}[rev] &gt; 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal">re</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>，则可取对数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo stretchy="false">]</mo><mo separator="true">,</mo><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false">]</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p = \min(\text{cnt}[word], \text{cnt}[rev])</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">d</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal">re</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">])</span></span></span></span>，每对贡献 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span>，更新 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo stretchy="false">]</mo><mo>−</mo><mo>=</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">\text{cnt}[word] -= p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">d</span><span class="mclose">]</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>cnt</mtext><mo stretchy="false">[</mo><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false">]</mo><mo>−</mo><mo>=</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">\text{cnt}[rev] -= p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">cnt</span></span><span class="mopen">[</span><span class="mord mathnormal">re</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>贪心原则</strong></p>
+<ul>
+<li>对于互为逆序的不同单词，尽量成对使用，保证两侧对称。</li>
+<li>对于自身回文的单词，先尽可能两两配对放在两侧，再考虑是否把剩余的一个放在中心，以获得最大长度。</li>
+</ul>
+</li>
+<li>
+<p><strong>返回结果</strong><br>
+最终累计的 <code>total_length</code> 即为最长回文串的长度。如果无法拼出任何回文，则 <code>total_length</code> 为 0。</p>
+</li>
+</ol>
+<h2 id="时间复杂度">时间复杂度</h2>
+<ul>
+<li>统计频次：遍历 <code>words</code> 长度为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 的数组，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>。</li>
+<li>遍历哈希表：哈希表至多包含 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 个不同二字母单词，遍历亦为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>。</li>
+<li>对每个单词的倒序操作由于固定长度 2，可视为常数时间 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。</li>
+</ul>
+<p>综上，整体时间复杂度为</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo>+</mo><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo>=</mo><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">O(n) + O(n) = O(n).
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mord">.</span></span></span></span></span></p>
+<h2 id="代码分解">代码分解</h2>
+<p>将上述思路拆解为以下几个步骤：</p>
+<ol>
+<li>
+<p><strong>引入必要模块</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>统计哈希表</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnt = Counter(words)</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>初始化变量</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">total_length = <span class="number">0</span></span><br><span class="line">used_center = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>遍历哈希表进行匹配</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> word, c <span class="keyword">in</span> cnt.items():</span><br><span class="line">    <span class="keyword">if</span> c == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    rev = word[::-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> word == rev:</span><br><span class="line">        <span class="comment"># 处理自身回文</span></span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 处理与逆序单词配对</span></span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>处理自身回文逻辑</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pairs = c // 2</span></span><br><span class="line">total_length += pairs * <span class="number">4</span></span><br><span class="line">cnt[word] -= pairs * <span class="number">2</span></span><br><span class="line"><span class="keyword">if</span> cnt[word] &gt; <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">not</span> used_center:</span><br><span class="line">    total_length += <span class="number">2</span></span><br><span class="line">    used_center = <span class="literal">True</span></span><br><span class="line">    cnt[word] -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>处理互为逆序逻辑</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> rev <span class="keyword">in</span> cnt <span class="keyword">and</span> cnt[rev] &gt; <span class="number">0</span>:</span><br><span class="line">    pair_count = <span class="built_in">min</span>(cnt[word], cnt[rev])</span><br><span class="line">    total_length += pair_count * <span class="number">4</span></span><br><span class="line">    cnt[word] -= pair_count</span><br><span class="line">    cnt[rev] -= pair_count</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>返回累计长度</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> total_length</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="代码实现">代码实现</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestPalindrome</span>(<span class="params">self, words: <span class="type">List</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 1. 统计每个单词出现次数</span></span><br><span class="line">        cnt = Counter(words)</span><br><span class="line">        </span><br><span class="line">        total_length = <span class="number">0</span>       <span class="comment"># 最终回文串长度</span></span><br><span class="line">        used_center = <span class="literal">False</span>    <span class="comment"># 是否已使用过“中心回文单词”</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 遍历哈希表进行配对</span></span><br><span class="line">        <span class="keyword">for</span> word, c <span class="keyword">in</span> cnt.items():</span><br><span class="line">            <span class="keyword">if</span> c == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 如果已经被配对消耗完，直接跳过</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            rev = word[::-<span class="number">1</span>]  <span class="comment"># 单词逆序</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> word == rev:</span><br><span class="line">                <span class="comment"># 情况 A：自身就是回文，例如 &quot;gg&quot;</span></span><br><span class="line">                <span class="comment"># 先两两配对放在两侧</span></span><br><span class="line">                pairs = c // <span class="number">2</span></span><br><span class="line">                total_length += pairs * <span class="number">4</span>   <span class="comment"># 每对各占两侧 2 + 2</span></span><br><span class="line">                cnt[word] -= pairs * <span class="number">2</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 如果剩下一个且尚未使用中心，则放在中间</span></span><br><span class="line">                <span class="keyword">if</span> cnt[word] &gt; <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">not</span> used_center:</span><br><span class="line">                    total_length += <span class="number">2</span></span><br><span class="line">                    used_center = <span class="literal">True</span></span><br><span class="line">                    cnt[word] -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 情况 B：与逆序单词匹配，例如 &quot;ab&quot; 与 &quot;ba&quot;</span></span><br><span class="line">                <span class="keyword">if</span> rev <span class="keyword">in</span> cnt <span class="keyword">and</span> cnt[rev] &gt; <span class="number">0</span>:</span><br><span class="line">                    pair_count = <span class="built_in">min</span>(cnt[word], cnt[rev])</span><br><span class="line">                    total_length += pair_count * <span class="number">4</span></span><br><span class="line">                    cnt[word] -= pair_count</span><br><span class="line">                    cnt[rev] -= pair_count</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 3. 返回最终回文串长度</span></span><br><span class="line">        <span class="keyword">return</span> total_length</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org">Yuxico</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org/post/longest-palindrome-by-concatenating-two-letter-words.html">https://blog.icjlu.eu.org/post/longest-palindrome-by-concatenating-two-letter-words.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.icjlu.eu.org" target="_blank">Stay hungry. Stay foolish.</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Algorithm/">Algorithm</a><a class="post-meta__tags" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/">字符串处理</a><a class="post-meta__tags" href="/tags/%E5%9B%9E%E6%96%87%E6%95%B0%E6%9E%84%E9%80%A0/">回文数构造</a><a class="post-meta__tags" href="/tags/%E4%B8%AD%E7%AD%89/">中等</a><a class="post-meta__tags" href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/">哈希表</a><a class="post-meta__tags" href="/tags/%E8%B4%AA%E5%BF%83/">贪心</a></div><div class="post-share"><div class="social-share" data-image="https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/post/find-words-containing-character.html" title="LeetCode每日一题2025-05-24"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/24/h1lz5AbjQmrgDdw.png" onerror="onerror=null;src='/img/404.png'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">LeetCode每日一题2025-05-24</div></div><div class="info-2"><div class="info-item-1">2942. 查找包含给定字符的单词 E 给你一个下标从 0 开始的字符串数组 words 和一个字符 x 。 请你返回一个 下标数组 ，表示下标在数组中对应的单词包含字符 x 。 注意...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/push-dominoes.html" title="LeetCode每日一题2025-05-02"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/02/v163It2HdnPixDE.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-02</div><div class="info-item-2">LeetCode每日一题2025-05-02</div></div><div class="info-2"><div class="info-item-1">838. 推多米诺 M n...</div></div></div></a><a class="pagination-related" href="/post/rabbits-in-forest.html" title="LeetCode每日一题2025-04-20"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/04/20/oiYs7lFC6J1V4Em.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-20</div><div class="info-item-2">LeetCode每日一题2025-04-20</div></div><div class="info-2"><div class="info-item-1">781. 森林中的兔子 M 森林中有未知数量的兔子。提问其中若干只兔子 “还有多少只兔子与你（指被提问的兔子）颜色相同?” ，将答案收集到一个整数数组 answers 中，其中...</div></div></div></a><a class="pagination-related" href="/post/zero-array-transformation-iii.html" title="LeetCode每日一题2025-05-22"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/22/dwGIEoujv82e9p6.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-22</div><div class="info-item-2">LeetCode每日一题2025-05-22</div></div><div class="info-2"><div class="info-item-1">3362. 零数组变换 III M 给你一个长度为 n 的整数数组 nums 和一个二维数组 queries ，其中 queries[i] = [lᵢ, rᵢ] 。 每一个...</div></div></div></a><a class="pagination-related" href="/post/zero-array-transformation-ii.html" title="LeetCode每日一题2025-05-21"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/21/fkyQ5naMbhvwZcr.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-21</div><div class="info-item-2">LeetCode每日一题2025-05-21</div></div><div class="info-2"><div class="info-item-1">3356. 零数组变换 II M 给你一个长度为 n 的整数数组 nums 和一个二维数组 queries，其中 queries[i] = [lᵢ, rᵢ, valᵢ]。 每个...</div></div></div></a><a class="pagination-related" href="/post/zero-array-transformation-i.html" title="LeetCode每日一题2025-05-20"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/20/gqKS9aAvyrj4DGL.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-20</div><div class="info-item-2">LeetCode每日一题2025-05-20</div></div><div class="info-2"><div class="info-item-1">3355. 零数组变换 I M 给定一个长度为 n 的整数数组 nums 和一个二维数组 queries，其中 queries[i] = [li, ri]。 对于每个查询...</div></div></div></a><a class="pagination-related" href="/post/count-equal-and-divisible-pairs.html" title="LeetCode每日一题2025-05-18"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/18/cvjsYtbh5NDxiVQ.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-18</div><div class="info-item-2">LeetCode每日一题2025-05-18</div></div><div class="info-2"><div class="info-item-1">1931. 用三种不同颜色为网格涂色 H 给你两个整数 m 和 n 。构造一个 m x n 的网格，其中每个单元格最开始是白色。请你用 红、绿、蓝...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yuxico</div><div class="author-info-description">生如逆旅，一苇以航</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yuxcoo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Yuxcoo" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yuxicon@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://space.bilibili.com/533860721" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00aeec;"></i></a><a class="social-icon" href="https://twitter.com/yxico_cjlu" target="_blank" title="Twitter"><i class="fab fa-x-twitter" style="color: #0f1419;"></i></a><a class="social-icon" href="https://t.me/+Z8s3eL8dhgA3YWRl" target="_blank" title="Telegram"><i class="fab fa-telegram" style="color: #4b9dee;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">请赐予我宁静，<br>
+去接受我所不能改变的；<br>
+赐予我勇气，<br>
+去改变我所能改变的；<br>
+并赐予我智慧，<br>
+去分辨这两者的差别。
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">2131. 连接两字母单词得到的最长回文串 M</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%80%9D%E8%B7%AF"><span class="toc-number">1.2.</span> <span class="toc-text">算法思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="toc-number">1.3.</span> <span class="toc-text">时间复杂度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E8%A7%A3"><span class="toc-number">1.4.</span> <span class="toc-text">代码分解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.5.</span> <span class="toc-text">代码实现</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/longest-palindrome-by-concatenating-two-letter-words.html" title="LeetCode每日一题2025-05-25"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-25"/></a><div class="content"><a class="title" href="/post/longest-palindrome-by-concatenating-two-letter-words.html" title="LeetCode每日一题2025-05-25">LeetCode每日一题2025-05-25</a><time datetime="2025-05-25T09:11:01.000Z" title="发表于 2025-05-25 17:11:01">2025-05-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/find-words-containing-character.html" title="LeetCode每日一题2025-05-24"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/24/h1lz5AbjQmrgDdw.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-24"/></a><div class="content"><a class="title" href="/post/find-words-containing-character.html" title="LeetCode每日一题2025-05-24">LeetCode每日一题2025-05-24</a><time datetime="2025-05-24T11:17:31.000Z" title="发表于 2025-05-24 19:17:31">2025-05-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/find-the-maximum-sum-of-node-values.html" title="LeetCode每日一题2025-05-23"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/23/TL6e3RUQwHnG1ci.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-23"/></a><div class="content"><a class="title" href="/post/find-the-maximum-sum-of-node-values.html" title="LeetCode每日一题2025-05-23">LeetCode每日一题2025-05-23</a><time datetime="2025-05-23T13:02:30.000Z" title="发表于 2025-05-23 21:02:30">2025-05-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/zero-array-transformation-iii.html" title="LeetCode每日一题2025-05-22"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/22/dwGIEoujv82e9p6.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-22"/></a><div class="content"><a class="title" href="/post/zero-array-transformation-iii.html" title="LeetCode每日一题2025-05-22">LeetCode每日一题2025-05-22</a><time datetime="2025-05-22T12:27:24.000Z" title="发表于 2025-05-22 20:27:24">2025-05-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/zero-array-transformation-ii.html" title="LeetCode每日一题2025-05-21"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/21/fkyQ5naMbhvwZcr.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-21"/></a><div class="content"><a class="title" href="/post/zero-array-transformation-ii.html" title="LeetCode每日一题2025-05-21">LeetCode每日一题2025-05-21</a><time datetime="2025-05-21T13:24:40.000Z" title="发表于 2025-05-21 21:24:40">2025-05-21</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/21/MTAwMTIyXzE3NDQ1NTA0NjkyNTM=.png);"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Yuxico</div><div class="runtime"><span id="runtimeshow"><i class="fas fa-clock"></i><span class="runtime-text">时间已奔赴 </span><span id="runtime_days"></span><span>天 </span><span id="runtime_hours"></span><span>小时 </span><span id="runtime_minutes"></span><span>分钟 </span><span id="runtime_seconds"></span><span>秒</span></span></div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div><script>function updateRuntime() {
+  const start = new Date("2022-01-01 00:00:00");
+  const now = new Date();
+  const diff = now - start;
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  document.getElementById("runtime_days").innerHTML = days;
+  document.getElementById("runtime_hours").innerHTML = hours;
+  document.getElementById("runtime_minutes").innerHTML = minutes;
+  document.getElementById("runtime_seconds").innerHTML = seconds;
+}
+
+setInterval(updateRuntime, 1000);
+updateRuntime();</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天" style="display:none"><i class="fas fa-message"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="Ruby,Python,JavaScript,TypeScript,HTML,CSS,Vue,React,Node.js,R,C#,C++,Matlab,SAS,PHP,Go,SQL" data-fontsize="16px" data-random="true" async="async"></script><script>(() => {
+  btf.getScript('//code.tidio.co/gcpmbfallv68ddoa0zzuekn6jcrc5m5v.js').then(() => {
+    const isChatBtn = true
+    const isChatHideShow = true
+
+    if (isChatBtn) {
+      let isShow = false
+      const close = () => {
+        window.tidioChatApi.hide()
+        isShow = false
+      }
+      
+      const open = () => {
+        window.tidioChatApi.open()
+        window.tidioChatApi.show()
+        isShow = true
+      }
+
+      const onTidioChatApiReady = () => {
+        window.tidioChatApi.hide()
+        window.tidioChatApi.on("close", close)
+      }
+      if (window.tidioChatApi) {
+        window.tidioChatApi.on("ready", onTidioChatApiReady)
+      } else {
+        document.addEventListener("tidioChat-ready", onTidioChatApiReady)
+      }
+
+      window.chatBtnFn = () => {
+        if (!window.tidioChatApi) return
+        isShow ? close() : open()
+      }
+
+      document.getElementById('chat-btn').style.display = 'block'
+
+    } else if (isChatHideShow) {
+      window.chatBtn = {
+        hide: () => window.tidioChatApi && window.tidioChatApi.hide(),
+        show: () => window.tidioChatApi && window.tidioChatApi.show()
+      }
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章或任意内容..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!--– 在页面底部手动插入 AI 摘要的脚本--><script defer src="/hexo-ai-summaries/gemini.js"></script><!--– 仅在 AI 翻译页面加载 translate.js--></body></html>
