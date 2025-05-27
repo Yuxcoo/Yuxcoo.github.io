@@ -1,0 +1,672 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>CatBoost内容补充 | Stay hungry. Stay foolish.</title><meta name="author" content="Yuxico"><meta name="copyright" content="Yuxico"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF5EE"><meta name="description" content="CatBoost内容补充 1. CatBoost (Categorical Boosting) CatBoost (Categorical Boosting) 是俄罗斯搜索巨头 Yandex 开发的一个开源梯度提升框架。它在 GBDT 的基础上进行了优化，尤其擅长处理类别特征，并且在训练过程中引入了独特的机制来缓解预测偏移 (Prediction Shift) 问题，提高了模型的鲁棒性和泛化能力。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CatBoost内容补充">
+<meta property="og:url" content="https://blog.icjlu.eu.org/post/CatBoost.html">
+<meta property="og:site_name" content="Stay hungry. Stay foolish.">
+<meta property="og:description" content="CatBoost内容补充 1. CatBoost (Categorical Boosting) CatBoost (Categorical Boosting) 是俄罗斯搜索巨头 Yandex 开发的一个开源梯度提升框架。它在 GBDT 的基础上进行了优化，尤其擅长处理类别特征，并且在训练过程中引入了独特的机制来缓解预测偏移 (Prediction Shift) 问题，提高了模型的鲁棒性和泛化能力。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6835c06258cb8da5c812c6f9.webp">
+<meta property="article:published_time" content="2025-05-27T12:55:00.000Z">
+<meta property="article:modified_time" content="2025-05-27T13:41:02.638Z">
+<meta property="article:author" content="Yuxico">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="决策树">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/6835c06258cb8da5c812c6f9.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CatBoost内容补充",
+  "url": "https://blog.icjlu.eu.org/post/CatBoost.html",
+  "image": "https://pic1.imgdb.cn/item/6835c06258cb8da5c812c6f9.webp",
+  "datePublished": "2025-05-27T12:55:00.000Z",
+  "dateModified": "2025-05-27T13:41:02.638Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yuxico",
+      "url": "https://blog.icjlu.eu.org/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://blog.icjlu.eu.org/post/CatBoost.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#3E2B2D')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF5EE')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 7 || hour >= 21
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":2,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Yuxico","link":"链接: ","source":"来源: Stay hungry. Stay foolish.","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#FF7D4D","bgDark":"#3E2B2D","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CatBoost内容补充',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!--– 仅在 AI 翻译页面加载 translate.css--><!--– 在这里手动插入 AI 摘要的样式表--><link rel="stylesheet" href="/hexo-ai-summaries/gemini.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Stay hungry. Stay foolish." type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://pic1.imgdb.cn/item/6835c06258cb8da5c812c6f9.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/42/MTAwMTIyXzE3NDQ1NTE3NTYyMjk=.png" alt="Logo"><span class="site-name">Stay hungry. Stay foolish.</span></a><a class="nav-page-title" href="/"><span class="site-name">CatBoost内容补充</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-compass"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></li><li><a class="site-page child" href="/translate/"><i class="fa-fw fas fa-language"></i><span> 私人翻译</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">CatBoost内容补充</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-27T12:55:00.000Z" title="发表于 2025-05-27 20:55:00">2025-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-27T13:41:02.638Z" title="更新于 2025-05-27 21:41:02">2025-05-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><!-- body 开头或你希望触发按钮出现的地方--><div class="post-gemini-ai">
+  <div class="ai-summary-trigger-button">
+    <!-- 熊猫 1：将 src 替换为你的实际图像路径或保留占位符 -->
+    <img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/7/21/39/MTAwMTIyXzE3NDY2MjUxOTYzMDY=.png" alt="" class="panda-button-img">
+    <span>点击获取AI摘要</span>
+  </div>
+  <!-- 摘要卡将由 JavaScript 插入此处 -->
+</div>
+<div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经过去&quot;,&quot;messageNext&quot;:&quot;天了，内容可能已经过时，请注意甄别内容呀！&quot;,&quot;postUpdate&quot;:&quot;2025-05-27 21:41:02&quot;}" hidden></div><h1>CatBoost内容补充</h1>
+<h2 id="1-CatBoost-Categorical-Boosting">1. CatBoost (Categorical Boosting)</h2>
+<p>CatBoost (Categorical Boosting) 是俄罗斯搜索巨头 Yandex 开发的一个开源梯度提升框架。它在 GBDT 的基础上进行了优化，<strong>尤其擅长处理类别特征</strong>，并且在训练过程中引入了独特的机制来<strong>缓解预测偏移 (Prediction Shift) 问题</strong>，提高了模型的鲁棒性和泛化能力。</p>
+<ul>
+<li><strong>核心思想:</strong> CatBoost 延续了梯度提升框架，迭代地构建决策树来优化目标函数。其最大的特点和创新在于其针对<strong>类别特征的处理方式</strong>以及<strong>有序提升 (Ordered Boosting)</strong> 算法。</li>
+<li><strong>与 XGBoost / LightGBM 的主要区别和改进 (重点内容):</strong>
+<ol>
+<li><strong>类别特征处理 (Categorical Feature Handling):</strong> 这是 CatBoost 的核心优势。它使用了一种被称为<strong>有序目标编码 (Ordered Target Encoding)</strong> 或 “Middles” 的方法，结合<strong>特征组合</strong>来有效地处理类别特征，避免了传统方法（如 One-Hot 或标准目标编码）可能带来的问题（维度爆炸、信息丢失、预测偏移）。</li>
+<li><strong>预测偏移问题与有序提升 (Prediction Shift &amp; Ordered Boosting):</strong> 标准的 Boosting 算法在计算梯度时使用了基于整个数据集的模型，这可能导致训练和预测分布不一致（预测偏移）。CatBoost 引入了<strong>有序提升</strong>，在计算每个样本的梯度时，仅使用基于<strong>该样本之前</strong>的数据子集训练的模型，从而缓解了这个问题。</li>
+<li><strong>决策树结构 (Tree Structure):</strong> CatBoost 默认使用<strong>对称的决策树 (Symmetric Trees)</strong>。在构建树时，同一深度的节点都使用相同的特征和分裂阈值进行分裂。这使得树结构更加规则，预测速度快，并且有一定的正则化效果。</li>
+<li><strong>基于直方图的数值特征处理 (Histogram-based Numerical Feature Handling):</strong> 对于数值特征，CatBoost 也采用了类似于 LightGBM 的直方图算法，将连续值离散化，提高了分裂点查找的效率。</li>
+<li><strong>更少的参数调优 (Less Parameter Tuning):</strong> 相比 XGBoost 和 LightGBM，CatBoost 在许多数据集上使用默认参数就能获得不错的效果，减少了调参的复杂性（尽管依然有很多参数可供调整）。</li>
+<li><strong>支持 GPU 训练:</strong> 对 GPU 的支持良好，可以显著加速训练过程。</li>
+</ol>
+</li>
+</ul>
+<h3 id="1-1-类别特征处理-Categorical-Feature-Handling">1.1 类别特征处理 (Categorical Feature Handling)</h3>
+<p>标准的处理类别特征的方法有 One-Hot Encoding 和 Target Encoding。</p>
+<ul>
+<li><strong>One-Hot Encoding (独热编码):</strong> 对于高基数（类别数量多）的类别特征，One-Hot Encoding 会产生大量的稀疏特征，增加模型复杂度和内存消耗。</li>
+<li><strong>Target Encoding (目标编码):</strong> 将类别特征的值替换为该类别对应目标变量的统计量（如均值）。例如，对于分类问题，可以将类别替换为该类别下样本属于正类的比例 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">[</mo><mi>y</mi><mi mathvariant="normal">∣</mi><mtext>category</mtext><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">E[y | \text{category}]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord">∣</span><span class="mord text"><span class="mord">category</span></span><span class="mclose">]</span></span></span></span>. 这种方法虽然有效，但在标准的 Boosting 框架下，容易导致<strong>信息泄露 (Data Leakage)</strong> 或<strong>预测偏移 (Prediction Shift)</strong>：在训练时，计算目标编码使用了整个数据集的信息，包括当前样本的目标值，这使得模型在训练集上表现很好，但在未见过的数据（测试集）上性能下降。</li>
+</ul>
+<p>CatBoost 针对这些问题提出了解决方案：</p>
+<ol>
+<li>
+<p><strong>有序目标编码 (Ordered Target Encoding) / “Middles”:</strong></p>
+<ul>
+<li>
+<p>为了避免信息泄露，CatBoost 在计算类别特征的目标编码时，采用了一种基于<strong>随机排列</strong>的方法。</p>
+</li>
+<li>
+<p>对于训练集的一个随机排列，当计算样本 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 的某个类别特征的目标编码时，<strong>只使用在该排列中位于样本 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 之前的样本</strong>来计算统计量。</p>
+</li>
+<li>
+<p>具体公式通常为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>EncodedValue</mtext><mi>i</mi></msub><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></munderover><mo stretchy="false">[</mo><msub><mtext>category</mtext><mi>j</mi></msub><mo>=</mo><msub><mtext>category</mtext><mi>i</mi></msub><mo stretchy="false">]</mo><mo>⋅</mo><msub><mtext>target</mtext><mi>j</mi></msub><mo>+</mo><mtext>prior</mtext><mo>⋅</mo><mtext>weight</mtext></mrow><mrow><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></munderover><mo stretchy="false">[</mo><msub><mtext>category</mtext><mi>j</mi></msub><mo>=</mo><msub><mtext>category</mtext><mi>i</mi></msub><mo stretchy="false">]</mo><mo>⋅</mo><mtext>weight</mtext><mo>+</mo><mtext>prior</mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{EncodedValue}_i = \frac{\sum_{j=1}^{i-1} [\text{category}_j = \text{category}_i] \cdot \text{target}_j + \text{prior} \cdot \text{weight}}{\sum_{j=1}^{i-1} [\text{category}_j = \text{category}_i] \cdot \text{weight} + \text{prior}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">EncodedValue</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.0808em;vertical-align:-1.2904em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7904em;"><span style="top:-2.1454em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9646em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mopen">[</span><span class="mord"><span class="mord text"><span class="mord">category</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3802em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord text"><span class="mord">category</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">weight</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">prior</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.8258em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9646em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mopen">[</span><span class="mord"><span class="mord text"><span class="mord">category</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3802em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord text"><span class="mord">category</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord text"><span class="mord">target</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3802em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">prior</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">weight</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2904em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mo>⋅</mo><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[\cdot]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">⋅</span><span class="mclose">]</span></span></span></span> 是指示函数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>prior</mtext></mrow><annotation encoding="application/x-tex">\text{prior}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8623em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">prior</span></span></span></span></span> 是一个先验值（如整个数据集的目标均值），<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>weight</mtext></mrow><annotation encoding="application/x-tex">\text{weight}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">weight</span></span></span></span></span> 是先验的权重。使用先验可以减少低频类别带来的噪声。</p>
+</li>
+<li>
+<p>CatBoost 可以使用多个随机排列来计算不同的编码，增加鲁棒性。</p>
+</li>
+<li>
+<p><strong>优点:</strong> 有效地处理了类别特征，避免了信息泄露和预测偏移，无需手动进行 One-Hot 或目标编码。</p>
+</li>
+<li>
+<p><strong>缺点:</strong> 需要对数据进行排序和多次统计计算，增加了训练时间。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>特征组合 (Feature Combinations):</strong></p>
+<ul>
+<li>CatBoost 可以在训练过程中自动地将某些类别特征进行组合，生成新的组合特征（例如，将 <code>Country=USA</code> 和 <code>City=NewYork</code> 组合成 <code>Country=USA_City=NewYork</code>）。</li>
+<li>这些组合特征也使用有序目标编码进行处理。</li>
+<li><strong>优点:</strong> 可以发现特征之间的交互作用，提高模型的表达能力。</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-2-预测偏移与有序提升-Prediction-Shift-Ordered-Boosting">1.2 预测偏移与有序提升 (Prediction Shift &amp; Ordered Boosting)</h3>
+<ul>
+<li><strong>预测偏移问题:</strong> 在标准的梯度提升算法中，训练第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 棵树时计算的梯度是基于前 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 棵树的模型对整个训练集的预测误差。这个模型是使用整个训练集的信息构建的。这意味着，当前用来计算梯度的模型，包含了未来将被用来训练第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 棵树的数据的信息。这导致训练过程中使用的预测分布与最终模型在全新数据上的预测分布之间存在差异，即预测偏移。这个问题在使用基于目标统计量的特征（如目标编码）时尤其突出。</li>
+<li><strong>有序提升 (Ordered Boosting):</strong>
+<ul>
+<li>CatBoost 提出有序提升来解决预测偏移问题。</li>
+<li>在训练第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 棵树时，它使用<strong>两个不同的模型</strong>：一个用于计算梯度和 Hessian（基于随机子集训练），一个用于构建当前的树。</li>
+<li>更直观地理解：对于一个随机排列的训练集，当训练用于预测样本 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 的模型时，<strong>只使用该排列中位于样本 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 之前的样本</strong>来构建这棵树。然后用这棵树在样本 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 上计算梯度。</li>
+<li>实际上，为了效率，CatBoost 通常会使用多组随机排列，并对每个排列独立地训练一个模型来计算梯度。</li>
+<li><strong>优点:</strong> 显著减轻了预测偏移问题，提高了模型的泛化能力和鲁棒性。</li>
+<li><strong>缺点:</strong> 相比标准提升（Plain Boosting），计算成本更高，训练时间可能更长。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3-对称树结构-Symmetric-Tree-Structure">1.3 对称树结构 (Symmetric Tree Structure)</h3>
+<ul>
+<li><strong>策略:</strong> CatBoost 默认构建对称树。在每一层，它找到一个最佳的分裂 (特征 + 阈值)，然后将该分裂应用到该层的所有叶子节点上。</li>
+<li><strong>优点:</strong>
+<ul>
+<li><strong>预测速度快:</strong> 由于结构规则，可以高效地进行矢量化计算。</li>
+<li><strong>防止过拟合:</strong> 对称结构限制了树的灵活性，起到一定的正则化作用。</li>
+</ul>
+</li>
+<li><strong>缺点:</strong>
+<ul>
+<li>可能不如非对称树（如 Leaf-wise）灵活，在某些问题上可能无法达到理论上的最优解。</li>
+<li>可以通过 <code>grow_policy</code> 参数切换到非对称结构（Lossguide）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-4-LightGBM-的目标函数与优化">1.4 LightGBM 的目标函数与优化</h3>
+<p>CatBoost 基于 GBDT 框架，目标函数与 XGBoost 类似，也是最小化损失函数加上正则化项。虽然它也使用了二阶泰勒展开来近似损失函数，但在有序提升框架下，计算梯度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">g_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 和 Hessian <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">h_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 的模型是不同的。</p>
+<p>假设要优化的简化目标函数（类似 XGBoost）：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mtext>Obj</mtext><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></msup><mo>≈</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo fence="true">[</mo><msub><mi>g</mi><mi>i</mi></msub><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>h</mi><mi>i</mi></msub><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo fence="true">]</mo></mrow><mo>+</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false">(</mo><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{Obj}^{(t)} \approx \sum_{i=1}^n \left[ g_i h_t(x_i) + \frac{1}{2} h_i h_t(x_i)^2 \right] + \Omega(h_t)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1668em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord text"><span class="mord">Obj</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9723em;"><span style="top:-3.1473em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">t</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Ω</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>在有序提升中，计算 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">g_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">h_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 时，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover accent="true"><mi>y</mi><mo>^</mo></mover><mi>i</mi><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msubsup></mrow><annotation encoding="application/x-tex">\hat{y}_i^{(t-1)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3217em;vertical-align:-0.2769em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4231em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span></span></span></span> 是由一个只训练到样本 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 之前的数据的模型产生的预测。</p>
+<h3 id="1-5-CatBoost-参数解释-部分关键参数">1.5 CatBoost 参数解释 (部分关键参数)</h3>
+<p>CatBoost 也有很多参数，许多与 XGBoost 和 LightGBM 类似，但处理类别特征和有序提升相关的参数是其特色。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数/属性</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">默认值</th>
+<th style="text-align:left">类型/选项</th>
+<th style="text-align:left">重要性级别</th>
+<th style="text-align:left">与XGBoost/LightGBM对比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>loss_function</code> / <code>objective</code></td>
+<td style="text-align:left">定义学习任务及损失函数。类似 XGBoost/LightGBM。支持多种损失函数。</td>
+<td style="text-align:left"><code>'RMSE'</code> (回归), <code>'Logloss'</code> (二分类)</td>
+<td style="text-align:left">string</td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>eval_metric</code></td>
+<td style="text-align:left">评估指标。类似 XGBoost/LightGBM 的 <code>eval_metric</code>/<code>metric</code>。</td>
+<td style="text-align:left">根据 <code>loss_function</code></td>
+<td style="text-align:left">string or list of strings</td>
+<td style="text-align:left"><strong>高 (用于评估)</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>iterations</code> / <code>n_estimators</code></td>
+<td style="text-align:left">Boosting 迭代次数，即树的数量。</td>
+<td style="text-align:left">100</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>learning_rate</code></td>
+<td style="text-align:left"><strong>学习率 (Learning Rate)。</strong> 缩放每棵树的贡献。</td>
+<td style="text-align:left">0.03</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">默认值通常较低</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>depth</code></td>
+<td style="text-align:left"><strong>树的深度。</strong> 对于默认的对称树结构，这是严格的最大深度。</td>
+<td style="text-align:left">6</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">类似 XGBoost 的 <code>max_depth</code>，但针对对称树结构</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>l2_leaf_reg</code></td>
+<td style="text-align:left"><strong>L2 正则化系数。</strong> 叶子节点权重的 L2 正则化。与 XGBoost 的 <code>reg_lambda</code> 类似。</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>model_shrink_rate</code></td>
+<td style="text-align:left"><strong>[仅用于 Ordered Boosting] 模型收缩率。</strong> 影响 Leaf Estimation 计算过程。</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">float</td>
+<td style="text-align:left">中</td>
+<td style="text-align:left">CatBoost 独有 (Ordered Boosting)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>random_seed</code></td>
+<td style="text-align:left">随机种子。用于数据采样、排列等随机过程，确保结果可复现。</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left"><strong>实用</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>cat_features</code></td>
+<td style="text-align:left"><strong>指定哪些特征是类别特征。</strong> 可以是特征索引列表或特征名称列表。<strong>非常重要！</strong></td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">list of int or list of str</td>
+<td style="text-align:left"><strong>高 (处理类别特征时)</strong></td>
+<td style="text-align:left">CatBoost 核心参数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>verbose</code></td>
+<td style="text-align:left">控制训练过程输出信息的详细程度。可以指定整数（如 0, 100 表示每 100 轮打印一次）或布尔值。</td>
+<td style="text-align:left">True</td>
+<td style="text-align:left">bool or int</td>
+<td style="text-align:left"><strong>实用</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>early_stopping_rounds</code></td>
+<td style="text-align:left"><strong>[fit 方法参数] 早期停止轮数。</strong> 在 <code>fit</code> 方法中指定。如果在验证集上经过 <code>early_stopping_rounds</code> 轮迭代后，评估指标没有提升，训练就会停止。需要同时提供验证集和 <code>eval_metric</code>。<strong>非常重要！</strong></td>
+<td style="text-align:left">N/A</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left"><strong>高 (用于早期停止)</strong></td>
+<td style="text-align:left">类似</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>border_count</code></td>
+<td style="text-align:left"><strong>[数值特征参数] 用于构建数值特征直方图的桶的数量。</strong> 值越大，分裂点选择越精确，但训练越慢。</td>
+<td style="text-align:left">254</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">实用</td>
+<td style="text-align:left">类似 LightGBM</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>grow_policy</code></td>
+<td style="text-align:left"><strong>树的生长策略。</strong> <code>'SymmetricTrees'</code> (默认，对称生长)，<code>'Depthwise'</code> (按层生长)，<code>'Lossguide'</code> (按损失最佳优先生长，类似 LightGBM 的 Leaf-wise)。</td>
+<td style="text-align:left"><code>'SymmetricTrees'</code></td>
+<td style="text-align:left"><code>'SymmetricTrees'</code>, <code>'Depthwise'</code>, <code>'Lossguide'</code></td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">控制树结构，与 XGBoost/LightGBM 策略对应</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>min_data_in_leaf</code></td>
+<td style="text-align:left"><strong>叶子节点中所需的最小样本数。</strong> 与 LightGBM 的 <code>min_child_samples</code> 类似。</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">中</td>
+<td style="text-align:left">类似 LightGBM 的 <code>min_child_samples</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>boosting_type</code></td>
+<td style="text-align:left"><strong>Boosting 类型。</strong> <code>'Ordered'</code> (有序提升，默认), <code>'Plain'</code> (标准提升)。使用 Ordered 可以缓解预测偏移，但训练较慢。</td>
+<td style="text-align:left"><code>'Ordered'</code></td>
+<td style="text-align:left"><code>'Ordered'</code>, <code>'Plain'</code></td>
+<td style="text-align:left"><strong>高</strong></td>
+<td style="text-align:left">CatBoost 核心参数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>allow_writing_files</code></td>
+<td style="text-align:left">是否允许 CatBoost 在训练期间创建临时文件（用于存储中间计算结果，如有序统计量）。禁用可以避免生成文件，但在处理大规模数据时可能需要更多内存。</td>
+<td style="text-align:left">True</td>
+<td style="text-align:left">bool</td>
+<td style="text-align:left">实用</td>
+<td style="text-align:left">CatBoost 相关</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>feature_importances_</code></td>
+<td style="text-align:left"><strong>[属性] 特征重要性。</strong> 拟合后可用。CatBoost 支持多种计算方式。</td>
+<td style="text-align:left">N/A</td>
+<td style="text-align:left">array</td>
+<td style="text-align:left">N/A</td>
+<td style="text-align:left">类似</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-6-Scikit-learn-API-示例-CatBoost">1.6 Scikit-learn API 示例 (CatBoost)</h3>
+<p>CatBoost 也提供了与 scikit-learn 兼容的 API (<code>CatBoostClassifier</code> 和 <code>CatBoostRegressor</code>)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入 CatBoost 的 Scikit-learn API</span></span><br><span class="line"><span class="keyword">from</span> catboost <span class="keyword">import</span> CatBoostClassifier, Pool</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score, classification_report</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris <span class="comment"># 使用一个简单数据集</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment"># 方便处理数据和指定类别特征</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line">iris = load_iris()</span><br><span class="line">X, y = iris.data, iris.target</span><br><span class="line">feature_names = iris.feature_names</span><br><span class="line">target_names = iris.target_names</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为 Pandas DataFrame，并添加一个模拟的类别特征</span></span><br><span class="line">X_df = pd.DataFrame(X, columns=feature_names)</span><br><span class="line"><span class="comment"># 假设第一个特征（sepal length）根据某个阈值（例如 5.5）分为两类</span></span><br><span class="line">X_df[<span class="string">&#x27;sepal length category&#x27;</span>] = X_df[<span class="string">&#x27;sepal length (cm)&#x27;</span>].apply(<span class="keyword">lambda</span> x: <span class="string">&#x27;long&#x27;</span> <span class="keyword">if</span> x &gt; <span class="number">5.5</span> <span class="keyword">else</span> <span class="string">&#x27;short&#x27;</span>)</span><br><span class="line"><span class="comment"># 确保类别特征的 dtype 是 &#x27;category&#x27; 或 &#x27;object&#x27;</span></span><br><span class="line">X_df[<span class="string">&#x27;sepal length category&#x27;</span>] = X_df[<span class="string">&#x27;sepal length category&#x27;</span>].astype(<span class="string">&#x27;category&#x27;</span>)</span><br><span class="line"></span><br><span class="line">y_series = pd.Series(y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割数据集</span></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X_df, y_series, test_size=<span class="number">0.3</span>, random_state=<span class="number">42</span>, stratify=y_series)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n--- CatBoost Classifier 示例 ---&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化 CatBoost 分类器</span></span><br><span class="line"><span class="comment"># loss_function=&#x27;MultiClass&#x27; 用于多分类</span></span><br><span class="line"><span class="comment"># eval_metric=&#x27;MultiClass&#x27; 或 &#x27;MultiLogloss&#x27;</span></span><br><span class="line"><span class="comment"># cat_features 指定类别特征列的索引或名称</span></span><br><span class="line"><span class="comment"># CatBoost 默认使用有序提升和对称树</span></span><br><span class="line">catb_clf = CatBoostClassifier(iterations=<span class="number">500</span>, <span class="comment"># 迭代次数，配合 early stopping</span></span><br><span class="line">                              learning_rate=<span class="number">0.1</span>,</span><br><span class="line">                              depth=<span class="number">6</span>, <span class="comment"># 树的深度</span></span><br><span class="line">                              l2_leaf_reg=<span class="number">3</span>, <span class="comment"># L2 正则化</span></span><br><span class="line">                              loss_function=<span class="string">&#x27;MultiClass&#x27;</span>, <span class="comment"># 损失函数</span></span><br><span class="line">                              eval_metric=<span class="string">&#x27;MultiClass&#x27;</span>, <span class="comment"># 评估指标</span></span><br><span class="line">                              random_seed=<span class="number">42</span>,</span><br><span class="line">                              verbose=<span class="number">100</span>, <span class="comment"># 每100轮打印一次信息</span></span><br><span class="line">                              <span class="comment"># cat_features=[4] # 如果指定列索引，这里是新加的类别列索引</span></span><br><span class="line">                              cat_features=[<span class="string">&#x27;sepal length category&#x27;</span>], <span class="comment"># 指定列名称更直观</span></span><br><span class="line">                              early_stopping_rounds=<span class="number">10</span>, <span class="comment"># 早期停止轮数</span></span><br><span class="line">                              <span class="comment"># boosting_type=&#x27;Ordered&#x27; # 默认就是Ordered，也可以显式指定</span></span><br><span class="line">                              <span class="comment"># grow_policy=&#x27;SymmetricTrees&#x27; # 默认就是SymmetricTrees</span></span><br><span class="line">                              <span class="comment"># allow_writing_files=False # 如果不希望生成文件，可以设为False</span></span><br><span class="line">                              )</span><br><span class="line"></span><br><span class="line"><span class="comment"># CatBoost 的 fit 方法可以直接传入类别特征信息</span></span><br><span class="line"><span class="comment"># eval_set 参数用于指定验证集</span></span><br><span class="line">catb_clf.fit(X_train, y_train,</span><br><span class="line">             eval_set=(X_test, y_test), <span class="comment"># 验证集</span></span><br><span class="line">             <span class="comment"># cat_features 指定类别特征列的索引或名称 (也可以在这里指定)</span></span><br><span class="line">             <span class="comment"># cat_features=[&#x27;sepal length category&#x27;]</span></span><br><span class="line">             )</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测</span></span><br><span class="line">y_pred_catb = catb_clf.predict(X_test)</span><br><span class="line"><span class="comment"># CatBoost predict 默认返回原始预测结果（类别索引或回归值），对于分类问题通常需要 predict_proba 获取概率</span></span><br><span class="line"><span class="comment"># y_pred_proba_catb = catb_clf.predict_proba(X_test)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果是多分类且 loss_function 为 MultiClass，predict 返回的是类别索引</span></span><br><span class="line"><span class="comment"># 如果是二分类且 loss_function 为 Logloss，predict 返回的是原始预测值，需要 sigmoid 转换为概率或使用 predict_proba</span></span><br><span class="line">accuracy_catb = accuracy_score(y_test, y_pred_catb)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;\n准确率: <span class="subst">&#123;accuracy_catb:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"><span class="comment"># print(&quot;分类报告:\n&quot;, classification_report(y_test, y_pred_catb, target_names=target_names))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印实际训练的树数量</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;实际训练的树数量: <span class="subst">&#123;catb_clf.get_best_iteration() + <span class="number">1</span> <span class="keyword">if</span> catb_clf.get_best_iteration() <span class="keyword">else</span> catb_clf.get_params()[<span class="string">&#x27;iterations&#x27;</span>]&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印特征重要性 (默认是基于分裂次数)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;特征重要性 (CatBoost - Default):&quot;</span>)</span><br><span class="line">feature_names_with_cat = feature_names + [<span class="string">&#x27;sepal length category&#x27;</span>]</span><br><span class="line">importances = catb_clf.get_feature_importance()</span><br><span class="line"><span class="keyword">for</span> name, importance <span class="keyword">in</span> <span class="built_in">zip</span>(feature_names_with_cat, importances):</span><br><span class="line">     <span class="built_in">print</span>(<span class="string">f&quot;  <span class="subst">&#123;name&#125;</span>: <span class="subst">&#123;importance:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以获取基于增益的特征重要性</span></span><br><span class="line"><span class="comment"># print(&quot;\n特征重要性 (CatBoost - Gain):&quot;)</span></span><br><span class="line"><span class="comment"># importances_gain = catb_clf.get_feature_importance(prettified=True, importance_type=&#x27;Gain&#x27;)</span></span><br><span class="line"><span class="comment"># print(importances_gain) # prettified=True 返回DataFrame</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-7-CatBoost-的优点和缺点">1.7 CatBoost 的优点和缺点</h3>
+<ul>
+<li><strong>优点:</strong>
+<ul>
+<li><strong>强大的类别特征处理能力:</strong> 内置的有序目标编码和特征组合，无需复杂的预处理。</li>
+<li><strong>缓解预测偏移:</strong> 有序提升算法提高了模型的鲁棒性和泛化能力。</li>
+<li><strong>较少的参数调优:</strong> 通常使用默认参数就能获得不错的效果。</li>
+<li><strong>预测速度快:</strong> 默认的对称树结构有助于加速预测。</li>
+<li><strong>支持 GPU:</strong> 可以利用 GPU 加速训练。</li>
+<li><strong>鲁棒性:</strong> 对异常值和缺失值不敏感（部分程度上）。</li>
+</ul>
+</li>
+<li><strong>缺点:</strong>
+<ul>
+<li><strong>训练速度可能不如 LightGBM (特别是Plain模式下):</strong> 有序提升增加了计算复杂度。</li>
+<li><strong>内存消耗相对较高:</strong> 特别是 Ordered 模式和处理大量类别特征时，需要存储中间统计信息。</li>
+<li><strong>默认对称树的限制:</strong> 在某些问题上可能限制了模型的灵活性，不如 Leaf-wise 策略能更快地逼近最优解。</li>
+<li><strong>模型大小:</strong> 模型文件可能较大。</li>
+<li><strong>需要显式指定类别特征:</strong> 必须通过 <code>cat_features</code> 参数告知 CatBoost 哪些列是类别特征。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-8-小结">1.8 小结</h3>
+<p>CatBoost 是一个专注于<strong>类别特征处理</strong>和<strong>缓解预测偏移</strong>的梯度提升框架。它通过独特的<strong>有序目标编码</strong>和<strong>有序提升</strong>算法，解决了传统方法在处理类别特征时遇到的问题。其默认的<strong>对称树结构</strong>提供了快速预测和一定的正则化效果。尽管在训练速度上可能不如 LightGBM，但其在处理类别特征时的便利性和由此带来的模型鲁棒性，使其成为许多实际应用中的有力选择，尤其当数据包含大量类别特征时。相比 XGBoost 和 LightGBM，CatBoost 的默认参数往往更“开箱即用”。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org">Yuxico</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.icjlu.eu.org/post/CatBoost.html">https://blog.icjlu.eu.org/post/CatBoost.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.icjlu.eu.org" target="_blank">Stay hungry. Stay foolish.</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/%E5%86%B3%E7%AD%96%E6%A0%91/">决策树</a></div><div class="post-share"><div class="social-share" data-image="https://pic1.imgdb.cn/item/6835c06258cb8da5c812c6f9.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/post/divisible-and-non-divisible-sums-difference.html" title="LeetCode每日一题2025-05-27"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/27/rVoBPIDf8jOylvp.png" onerror="onerror=null;src='/img/404.png'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">LeetCode每日一题2025-05-27</div></div><div class="info-2"><div class="info-item-1">2894. 分类求和并作差 E 给你两个正整数 n 和 m 。 现定义两个整数 num1 和 num2 ，如下所示：  num1：范围 [1, n] 内所有 无法被 m 整除...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/data-cleaning.html" title="Python 与数据清洗"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/21/38/MTAwMTIyXzE3NDc2NjE4OTc3NTA=.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-19</div><div class="info-item-2">Python 与数据清洗</div></div><div class="info-2"><div class="info-item-1">Python 与数据清洗 1....</div></div></div></a><a class="pagination-related" href="/post/pandas.html" title="Pandas操作方式笔记"><img class="cover" src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/5/19/20/43/MTAwMTIyXzE3NDc2NTg2MDc3MjM=.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-19</div><div class="info-item-2">Pandas操作方式笔记</div></div><div class="info-2"><div class="info-item-1">Pandas 操作方式笔记 1. Pandas 简介 Pandas 是一个在 Python 编程语言中广泛使用的数据操作和分析的开源库。它建立在另一个基础库 NumPy 之上，NumPy...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/54/MTAwMTIyXzE3NDQ1NTI0NDMwMzk=.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yuxico</div><div class="author-info-description">生如逆旅，一苇以航</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yuxcoo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Yuxcoo" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yuxicon@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://space.bilibili.com/533860721" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00aeec;"></i></a><a class="social-icon" href="https://twitter.com/yxico_cjlu" target="_blank" title="Twitter"><i class="fab fa-x-twitter" style="color: #0f1419;"></i></a><a class="social-icon" href="https://t.me/+Z8s3eL8dhgA3YWRl" target="_blank" title="Telegram"><i class="fab fa-telegram" style="color: #4b9dee;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">请赐予我宁静，<br>
+去接受我所不能改变的；<br>
+赐予我勇气，<br>
+去改变我所能改变的；<br>
+并赐予我智慧，<br>
+去分辨这两者的差别。
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">CatBoost内容补充</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-CatBoost-Categorical-Boosting"><span class="toc-number">1.1.</span> <span class="toc-text">1. CatBoost (Categorical Boosting)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E7%B1%BB%E5%88%AB%E7%89%B9%E5%BE%81%E5%A4%84%E7%90%86-Categorical-Feature-Handling"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 类别特征处理 (Categorical Feature Handling)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E9%A2%84%E6%B5%8B%E5%81%8F%E7%A7%BB%E4%B8%8E%E6%9C%89%E5%BA%8F%E6%8F%90%E5%8D%87-Prediction-Shift-Ordered-Boosting"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 预测偏移与有序提升 (Prediction Shift &amp; Ordered Boosting)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%AF%B9%E7%A7%B0%E6%A0%91%E7%BB%93%E6%9E%84-Symmetric-Tree-Structure"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 对称树结构 (Symmetric Tree Structure)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-LightGBM-%E7%9A%84%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.4.</span> <span class="toc-text">1.4 LightGBM 的目标函数与优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-CatBoost-%E5%8F%82%E6%95%B0%E8%A7%A3%E9%87%8A-%E9%83%A8%E5%88%86%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="toc-number">1.1.5.</span> <span class="toc-text">1.5 CatBoost 参数解释 (部分关键参数)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-Scikit-learn-API-%E7%A4%BA%E4%BE%8B-CatBoost"><span class="toc-number">1.1.6.</span> <span class="toc-text">1.6 Scikit-learn API 示例 (CatBoost)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-CatBoost-%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%BC%BA%E7%82%B9"><span class="toc-number">1.1.7.</span> <span class="toc-text">1.7 CatBoost 的优点和缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-8-%E5%B0%8F%E7%BB%93"><span class="toc-number">1.1.8.</span> <span class="toc-text">1.8 小结</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/CatBoost.html" title="CatBoost内容补充"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://pic1.imgdb.cn/item/6835c06258cb8da5c812c6f9.webp" onerror="this.onerror=null;this.src='/img/404.png'" alt="CatBoost内容补充"/></a><div class="content"><a class="title" href="/post/CatBoost.html" title="CatBoost内容补充">CatBoost内容补充</a><time datetime="2025-05-27T12:55:00.000Z" title="发表于 2025-05-27 20:55:00">2025-05-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/divisible-and-non-divisible-sums-difference.html" title="LeetCode每日一题2025-05-27"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/27/rVoBPIDf8jOylvp.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-27"/></a><div class="content"><a class="title" href="/post/divisible-and-non-divisible-sums-difference.html" title="LeetCode每日一题2025-05-27">LeetCode每日一题2025-05-27</a><time datetime="2025-05-27T12:53:47.000Z" title="发表于 2025-05-27 20:53:47">2025-05-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/largest-color-value-in-a-directed-graph.html" title="LeetCode每日一题2025-05-26"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/26/1TGyNl2ZjWdvE9q.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-26"/></a><div class="content"><a class="title" href="/post/largest-color-value-in-a-directed-graph.html" title="LeetCode每日一题2025-05-26">LeetCode每日一题2025-05-26</a><time datetime="2025-05-26T12:08:35.000Z" title="发表于 2025-05-26 20:08:35">2025-05-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/longest-palindrome-by-concatenating-two-letter-words.html" title="LeetCode每日一题2025-05-25"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/25/p25oHbild1zNRcP.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-25"/></a><div class="content"><a class="title" href="/post/longest-palindrome-by-concatenating-two-letter-words.html" title="LeetCode每日一题2025-05-25">LeetCode每日一题2025-05-25</a><time datetime="2025-05-25T09:11:01.000Z" title="发表于 2025-05-25 17:11:01">2025-05-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/find-words-containing-character.html" title="LeetCode每日一题2025-05-24"><img src= "https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/28/MTAwMTIyXzE3NDQ1NTA4OTQ1MjI=.gif" data-lazy-src="https://s2.loli.net/2025/05/24/h1lz5AbjQmrgDdw.png" onerror="this.onerror=null;this.src='/img/404.png'" alt="LeetCode每日一题2025-05-24"/></a><div class="content"><a class="title" href="/post/find-words-containing-character.html" title="LeetCode每日一题2025-05-24">LeetCode每日一题2025-05-24</a><time datetime="2025-05-24T11:17:31.000Z" title="发表于 2025-05-24 19:17:31">2025-05-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://e3f49eaa46b57.cdn.sohucs.com/2025/4/13/21/21/MTAwMTIyXzE3NDQ1NTA0NjkyNTM=.png);"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Yuxico</div><div class="runtime"><span id="runtimeshow"><i class="fas fa-clock"></i><span class="runtime-text">时间已奔赴 </span><span id="runtime_days"></span><span>天 </span><span id="runtime_hours"></span><span>小时 </span><span id="runtime_minutes"></span><span>分钟 </span><span id="runtime_seconds"></span><span>秒</span></span></div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div><script>function updateRuntime() {
+  const start = new Date("2022-01-01 00:00:00");
+  const now = new Date();
+  const diff = now - start;
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  document.getElementById("runtime_days").innerHTML = days;
+  document.getElementById("runtime_hours").innerHTML = hours;
+  document.getElementById("runtime_minutes").innerHTML = minutes;
+  document.getElementById("runtime_seconds").innerHTML = seconds;
+}
+
+setInterval(updateRuntime, 1000);
+updateRuntime();</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天" style="display:none"><i class="fas fa-message"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.cjlus.eu.org',
+      region: 'auto',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="Ruby,Python,JavaScript,TypeScript,HTML,CSS,Vue,React,Node.js,R,C#,C++,Matlab,SAS,PHP,Go,SQL" data-fontsize="16px" data-random="true" async="async"></script><script>(() => {
+  btf.getScript('//code.tidio.co/gcpmbfallv68ddoa0zzuekn6jcrc5m5v.js').then(() => {
+    const isChatBtn = true
+    const isChatHideShow = true
+
+    if (isChatBtn) {
+      let isShow = false
+      const close = () => {
+        window.tidioChatApi.hide()
+        isShow = false
+      }
+      
+      const open = () => {
+        window.tidioChatApi.open()
+        window.tidioChatApi.show()
+        isShow = true
+      }
+
+      const onTidioChatApiReady = () => {
+        window.tidioChatApi.hide()
+        window.tidioChatApi.on("close", close)
+      }
+      if (window.tidioChatApi) {
+        window.tidioChatApi.on("ready", onTidioChatApiReady)
+      } else {
+        document.addEventListener("tidioChat-ready", onTidioChatApiReady)
+      }
+
+      window.chatBtnFn = () => {
+        if (!window.tidioChatApi) return
+        isShow ? close() : open()
+      }
+
+      document.getElementById('chat-btn').style.display = 'block'
+
+    } else if (isChatHideShow) {
+      window.chatBtn = {
+        hide: () => window.tidioChatApi && window.tidioChatApi.hide(),
+        show: () => window.tidioChatApi && window.tidioChatApi.show()
+      }
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章或任意内容..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!--– 在页面底部手动插入 AI 摘要的脚本--><script defer src="/hexo-ai-summaries/gemini.js"></script><!--– 仅在 AI 翻译页面加载 translate.js--></body></html>
